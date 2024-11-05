@@ -5,6 +5,7 @@ skinparam packageStyle rectangle
 
 actor 考生
 actor 学院管理员
+actor 导师
 
 rectangle 研究生招生管理系统 {
   usecase "提交个人材料" as UC1
