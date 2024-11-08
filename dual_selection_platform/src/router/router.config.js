@@ -2,7 +2,7 @@ export default [
     {
         path: '/',
         name: 'index',
-        component: () => import('../views/Index/Index.vue'),
+        component: () => import('../views/Index/indexView.vue'),
         children:[]
     }
     // {
