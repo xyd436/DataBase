@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 //package com.example.dual_selection_platform_back.demos.web;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;

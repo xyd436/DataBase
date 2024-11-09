@@ -9,5 +9,4 @@ class DualSelectionPlatformBackApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
