@@ -1,4 +1,4 @@
-package com.example.back_dual_selection_platform;
+package com.example.dual_selection_platform_back;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

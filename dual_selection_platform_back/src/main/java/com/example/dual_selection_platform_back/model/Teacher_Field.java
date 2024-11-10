@@ -1,4 +1,4 @@
-package com.example.back_dual_selection_platform.model;
+package com.example.dual_selection_platform_back.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
