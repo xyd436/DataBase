@@ -5,44 +5,23 @@
       <a-menu
           :default-open-keys="['1']"
           :default-selected-keys="['0_3']"
-          :style="{ width: '100%' }"
+          :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
-        <a-menu-item key="0_1" disabled>
-          <IconHome></IconHome>
-          Menu 1
-        </a-menu-item>
-        <a-menu-item key="0_2">
-          <IconCalendar></IconCalendar>
-          Menu 2
-        </a-menu-item>
-        <a-menu-item key="0_3">
-          <IconCalendar></IconCalendar>
-          Menu 3
-        </a-menu-item>
         <a-sub-menu key="1">
           <template #title>
-            <IconCalendar></IconCalendar> Navigation 1
+            <IconCalendar></IconCalendar> 考生管理
           </template>
-          <a-menu-item key="1_1">Menu 1</a-menu-item>
-          <a-menu-item key="1_2">Menu 2</a-menu-item>
-          <a-sub-menu key="2" title="Navigation 2">
-            <a-menu-item key="2_1">Menu 1</a-menu-item>
-            <a-menu-item key="2_2">Menu 2</a-menu-item>
-          </a-sub-menu>
-          <a-sub-menu key="3" title="Navigation 3">
-            <a-menu-item key="3_1">Menu 1</a-menu-item>
-            <a-menu-item key="3_2">Menu 2</a-menu-item>
-            <a-menu-item key="3_3">Menu 3</a-menu-item>
-          </a-sub-menu>
+          <a-menu-item key="1_1">成绩导入</a-menu-item>
+          <a-menu-item key="1_2">成绩管理</a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="4">
+
+        <a-sub-menu key="2">
           <template #title>
-            <IconCalendar></IconCalendar> Navigation 4
+            <IconCalendar></IconCalendar> 录取管理
           </template>
-          <a-menu-item key="4_1">Menu 1</a-menu-item>
-          <a-menu-item key="4_2">Menu 2</a-menu-item>
-          <a-menu-item key="4_3">Menu 3</a-menu-item>
+          <a-menu-item key="2_1">复试信息审核</a-menu-item>
+          <a-menu-item key="2_2">复试导师质疑</a-menu-item>
         </a-sub-menu>
       </a-menu>
       <!-- trigger -->
@@ -52,14 +31,13 @@
       </template>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="padding-left: 20px;">
-        研究生导师学生双向选择系统
+      <a-layout-header style="padding-left: 20px;font-size: 25px;font-weight: bold">
+        研究生管理员系统
       </a-layout-header >
-      <a-layout style="padding: 0 24px;">
-        <a-breadcrumb :style="{ margin: '16px 0' }">
-          <a-breadcrumb-item>Home</a-breadcrumb-item>
-          <a-breadcrumb-item>List</a-breadcrumb-item>
-          <a-breadcrumb-item>App</a-breadcrumb-item>
+      <a-layout style="padding: 0 20px;">
+        <a-breadcrumb :style="{ margin: '14px 0' }">
+          <a-breadcrumb-item>录取管理</a-breadcrumb-item>
+          <a-breadcrumb-item>复试信息审核</a-breadcrumb-item>
         </a-breadcrumb>
         <a-layout-content>Content</a-layout-content>
         <a-layout-footer>Footer</a-layout-footer>
@@ -69,11 +47,11 @@
 </template>
 <script>
 import { defineComponent } from 'vue';
-import { Message} from '@arco-design/web-vue';
+import { Message } from '@arco-design/web-vue';
+import { useRouter } from 'vue-router'; // 引入 useRouter 钩子
 import {
   IconCaretRight,
   IconCaretLeft,
-  IconHome,
   IconCalendar,
 } from '@arco-design/web-vue/es/icon';
 
@@ -81,13 +59,38 @@ export default defineComponent({
   components: {
     IconCaretRight,
     IconCaretLeft,
-    IconHome,
     IconCalendar,
   },
-  methods: {
-    onClickMenuItem(key) {
-      Message.info({ content: `You select ${key}`, showIcon: true });
-    }
+  setup() {
+    const router = useRouter(); // 使用 useRouter 钩子
+
+    const onClickMenuItem = (key) => {
+      switch (key) {
+        case '1_1':
+          router.push('/'); // 跳转到成绩导入页面
+          Message.info({ content: `跳转到成绩导入页面`, showIcon: true });
+          break;
+        case '1_2':
+          router.push('/ScoreManage'); // 跳转到成绩管理页面
+          Message.info({ content: `跳转到成绩管理页面`, showIcon: true });
+          break;
+        case '2_1':
+          router.push('/InfoRetest'); // 跳转到复试信息审核页面
+          Message.info({ content: `跳转到复试信息审核页面`, showIcon: true });
+          break;
+        case '2_2':
+          router.push('/TeacherQuestion'); // 跳转到复试导师质疑页面
+          Message.info({ content: `跳转到复试导师质疑页面`, showIcon: true });
+          break;
+        default:
+          // 其他情况可以不做处理或者跳转到默认页面
+          break;
+      }
+    };
+
+    return {
+      onClickMenuItem,
+    };
   }
 });
 </script>
