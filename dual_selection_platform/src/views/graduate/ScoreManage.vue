@@ -1,7 +1,9 @@
 <template>
   <a-layout class="layout-demo">
-    <a-layout-sider collapsible breakpoint="xl">
-      <div class="logo" />
+    <a-layout-sider collapsible breakpoint="xl" >
+      <div class="logo" >
+
+      </div>
       <a-menu
           :default-open-keys="['1']"
           :default-selected-keys="['0_3']"
@@ -103,7 +105,7 @@ export default defineComponent({
 .layout-demo :deep(.arco-layout-sider) .logo {
   height: 32px;
   margin: 12px 8px;
-  background: rgba(255, 255, 255, 0.2);
+  background: #1f583f;
 }
 .layout-demo :deep(.arco-layout-sider-light) .logo{
   background: var(--color-fill-2);
