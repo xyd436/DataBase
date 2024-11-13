@@ -1,12 +1,10 @@
 <template>
   <a-layout class="layout-demo">
-    <a-layout-sider collapsible breakpoint="xl" >
-      <div class="logo" >
-
-      </div>
+    <a-layout-sider collapsible breakpoint="xl">
+      <div class="logo" />
       <a-menu
           :default-open-keys="['1']"
-          :default-selected-keys="['0_3']"
+          :default-selected-keys="['1_2']"
           :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
@@ -14,8 +12,8 @@
           <template #title>
             <IconCalendar></IconCalendar> 考生管理
           </template>
-          <a-menu-item key="1_1">成绩导入</a-menu-item>
-          <a-menu-item key="1_2">成绩管理</a-menu-item>
+          <a-menu-item key="1_1">初试成绩管理</a-menu-item>
+          <a-menu-item key="1_2">复试成绩管理</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="2">
@@ -39,10 +37,69 @@
       <a-layout style="padding: 0 20px;">
         <a-breadcrumb :style="{ margin: '14px 0' }">
           <a-breadcrumb-item>考生管理</a-breadcrumb-item>
-          <a-breadcrumb-item>成绩管理</a-breadcrumb-item>
+          <a-breadcrumb-item>复试成绩管理</a-breadcrumb-item>
         </a-breadcrumb>
-        <a-layout-content>Content</a-layout-content>
-        <a-layout-footer>Footer</a-layout-footer>
+        <a-layout-content>
+          <!--          内容展示部分-->
+          <a-table :columns="columns" :data="data" :scroll="scroll" column-resizable
+                   :pagination="false" :bordered="{cell:true,wrapper: true}" @change="handleChange"
+                   :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}" >
+            <template #name-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
+              <div class="custom-filter">
+                <a-space direction="vertical">
+                  <a-input :model-value="filterValue[0]" @input="(value)=>setFilterValue([value])" />
+                  <div class="custom-filter-footer">
+                    <a-button @click="handleFilterConfirm">查找</a-button>
+                    <a-button @click="handleFilterReset">重置</a-button>
+                  </div>
+                </a-space>
+              </div>
+            </template>
+<!--            编辑成绩/综合评价-->
+            <template #second_score="{ record }">
+              <a-textarea v-if="record.editable" v-model="record.second_score" auto-size :max-length="50" allow-clear show-word-limit />
+              <span v-else>{{ record.second_score }}</span>
+            </template>
+            <!-- 编辑时间-->
+            <template #time="{ record }">
+              <a-date-picker
+                  v-if="record.editable" v-model="record.time"
+                  style="width: 160px"
+                  show-time
+                  format="YYYY-MM-DD hh:mm"
+                  @change="onChange"
+                  @select="onSelect"
+                  @ok="onOk"
+              />
+<!--              <a-date-picker v-if="record.editable" v-model="record.time" />-->
+              <span v-else>{{ record.time }}</span>
+            </template>
+<!--            编辑地点-->
+            <template #location="{ record }">
+              <a-textarea v-if="record.editable" v-model="record.location" auto-size :max-length="50" allow-clear show-word-limit />
+              <span v-else>{{ record.location }}</span>
+            </template>
+<!--            编辑保存框-->
+            <template #edit="{ record }">
+              <a-space>
+                <a-button type="primary" status="warning" v-if="!record.editable" @click="handleEdit(record)">编辑</a-button>
+                <a-button type="primary" status="success" v-if="!record.editable" disabled>保存</a-button>
+              </a-space>
+              <a-space>
+                <a-button type="primary" status="warning" v-if="record.editable" disabled>编辑</a-button>
+                <a-button type="primary" status="success" v-if="record.editable"  @click="handleSave(record)" >保存</a-button>
+              </a-space>
+            </template>
+          </a-table>
+          <!--          上传所有成绩按钮-->
+          <a-button @click="handleSubmit" type="primary">上传所有成绩</a-button>
+        </a-layout-content>
+
+
+        <!--        <a-layout-footer>-->
+        <!--&lt;!&ndash;          页脚部分&ndash;&gt;-->
+        <!--          Footer-->
+        <!--        </a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-layout>
@@ -56,7 +113,11 @@ import {
   IconCaretLeft,
   IconCalendar,
 } from '@arco-design/web-vue/es/icon';
+import { reactive, h} from 'vue';
+import { IconSearch } from '@arco-design/web-vue/es/icon';
 
+//一键切换颜色模式
+//document.body.setAttribute('arco-theme', 'dark')
 export default defineComponent({
   components: {
     IconCaretRight,
@@ -65,16 +126,15 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter(); // 使用 useRouter 钩子
-
     const onClickMenuItem = (key) => {
       switch (key) {
         case '1_1':
-          router.push('/'); // 跳转到成绩导入页面
-          Message.info({ content: `跳转到成绩导入页面`, showIcon: true });
+          router.push('/'); // 跳转到初试成绩管理页面
+          Message.info({ content: `跳转到初试成绩管理页面`, showIcon: true });
           break;
         case '1_2':
-          router.push('/ScoreManage'); // 跳转到成绩管理页面
-          Message.info({ content: `跳转到成绩管理页面`, showIcon: true });
+          router.push('/ScoreManage'); // 跳转到复试成绩管理页面
+          Message.info({ content: `跳转到复试成绩管理页面`, showIcon: true });
           break;
         case '2_1':
           router.push('/InfoRetest'); // 跳转到复试信息审核页面
@@ -90,12 +150,137 @@ export default defineComponent({
       }
     };
 
-    return {
-      onClickMenuItem,
+    //表格
+    const columns = [
+      {
+        title: '姓名',
+        dataIndex: 'name',
+        fixed:'left',
+        filterable: {
+          filter: (value, record) => record.name.includes(value),
+          slotName: 'name-filter',
+          icon: () => h(IconSearch),
+        }
+      },
+      {
+        title: '性别',
+        dataIndex: 'sex',
+        filterable: {
+          filters: [{
+            text: '男',
+            value: '男',
+          }, {
+            text: '女',
+            value: '女',
+          },],
+          filter: (value, row) => row.sex.includes(value),
+        }
+      },
+      {
+        title: '准考证号',
+        dataIndex: 'exam_id',
+        filterable: {
+          filter: (value, record) => record.exam_id.includes(value),
+          slotName: 'name-filter',
+          icon: () => h(IconSearch),
+        }
+      },{
+        title: '复试科目',
+        dataIndex: 'second_course_name',
+        filterable: {
+          filters: [{
+            text: '外语听力与口语',
+            value: '外语听力与口语',
+          }, {
+            text: '专业知识测试',
+            value: '专业知识测试',
+          },{
+            text: '综合素质面试',
+            value: '综合素质面试',
+          },{
+            text: '综合评价',
+            value: '综合评价',
+          }],
+          filter: (value, row) => row.second_course_name.includes(value),
+        }
+      },{
+        title: '复试时间',
+        dataIndex: 'time',
+        slotName: 'time',
+      },
+      {
+        title: '地点',
+        dataIndex: 'location',
+        slotName: 'location',
+      },
+      {
+        title: '成绩/综合评价',
+        dataIndex: 'second_score',
+        slotName: 'second_score',
+      },
+      {
+        title: '编辑成绩',
+        dataIndex: 'edit',
+        slotName: 'edit',
+      }
+    ];
+
+    //表格滑动
+    const scroll = {
+      x:1800,
+      y:520
+    }
+
+    //表格数据
+    const data = reactive([
+      { key: '1', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '外语听力与口语', second_score: '0' },
+      { key: '2', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '专业知识测试', second_score: '0' },
+      { key: '3', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '综合素质面试', second_score: '0' },
+      { key: '4', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '综合评价', second_score: '无' },
+      { key: '5', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '外语听力与口语', second_score: '0' },
+      { key: '6', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '专业知识测试', second_score: '0' },
+      { key: '7', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '综合素质面试', second_score: '0' },
+      { key: '8', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '综合评价', second_score: '无' },
+      { key: '9', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '外语听力与口语', second_score: '0' },
+      { key: '10', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '专业知识测试', second_score: '0' },
+      { key: '11', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '综合素质面试', second_score: '0' },
+      { key: '12', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '综合评价', second_score: '无' },
+      { key: '13', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '外语听力与口语', second_score: '0' },
+      { key: '14', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '专业知识测试', second_score: '0' },
+      { key: '15', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '综合素质面试', second_score: '0' },
+      { key: '16', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '综合评价', second_score: '无' },
+    ].map(item => ({ ...item, editable: false })));
+
+    //处理编辑按钮
+    const handleEdit = (record) => {
+      record.editable = true;
     };
-  }
+    //处理数据保存
+    const handleSave = (record) => {
+      record.editable = false;
+    };
+    //处理数据提交
+    const handleSubmit = () => {
+      console.log('提交数据：', data);
+    };
+    const handleChange = (data, extra, currentDataSource) => {
+      console.log('change', data, extra, currentDataSource)
+    }
+
+    return {
+      columns,
+      data,
+      scroll,
+      handleChange,
+      handleEdit,
+      handleSave,
+      handleSubmit,
+      onClickMenuItem,
+    }
+  },
 });
 </script>
+
 <style scoped>
 .layout-demo {
   height: 100vh;
@@ -105,7 +290,7 @@ export default defineComponent({
 .layout-demo :deep(.arco-layout-sider) .logo {
   height: 32px;
   margin: 12px 8px;
-  background: #1f583f;
+  background: rgba(255, 255, 255, 0.2);
 }
 .layout-demo :deep(.arco-layout-sider-light) .logo{
   background: var(--color-fill-2);
@@ -127,15 +312,24 @@ export default defineComponent({
   font-weight: 400;
   font-size: 14px;
   background: var(--color-bg-3);
+  overflow: auto;
 }
 .layout-demo :deep(.arco-layout-footer),
 .layout-demo :deep(.arco-layout-content)  {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   color: var(--color-white);
-  font-size: 16px;
+  font-size: 20px;
   font-stretch: condensed;
   text-align: center;
+}
+.custom-filter {
+  padding: 20px;
+  background: var(--color-bg-5);
+  border: 1px solid var(--color-neutral-3);
+  border-radius: var(--border-radius-medium);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+}
+.custom-filter-footer {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
