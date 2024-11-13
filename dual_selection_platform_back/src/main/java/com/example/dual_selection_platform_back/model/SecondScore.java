@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +21,11 @@ public class SecondScore {
     @ApiModelProperty(value = "分数", required = true)
     private String score;
 
-    @ApiModelProperty(value = "时间和地点", required = false)
-    private String time_place;
+    @ApiModelProperty(value = "时间", required = false)
+    private Date time;
+
+    @ApiModelProperty(value = "地点", required = false)
+    private String location;
 
     @ApiModelProperty(value = "考生ID", required = true)
     private int student_id;

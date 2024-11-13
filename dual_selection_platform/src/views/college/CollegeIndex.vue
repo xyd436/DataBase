@@ -50,8 +50,8 @@
         <!-- footer -->
         <a-layout-footer style="color: #E5E6E8">
           <p>&copy; 2024. djx. 数据库.</p>
-<!--          <p>联系方式: example@example.com</p>-->
-<!--          <p><a href="/privacy-policy">隐私政策</a> | <a href="/terms-of-use">使用条款</a></p>-->
+          <!--          <p>联系方式: example@example.com</p>-->
+          <!--          <p><a href="/privacy-policy">隐私政策</a> | <a href="/terms-of-use">使用条款</a></p>-->
         </a-layout-footer>
       </a-layout>
     </a-layout>
