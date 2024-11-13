@@ -2,8 +2,9 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:0612'
-axios.defaults.headers.common.Authorization = 'qxc'
+axios.defaults.baseURL = 'http://localhost:612'
+// axios.defaults.headers.common.Authorization = 'qxc'
+axios.defaults.headers.common.Authorization = null;
 
 axios.interceptors.request.use(config => {
     // 在发送请求之前做些什么
@@ -22,4 +23,3 @@ axios.interceptors.response.use(response => {
 })
 
 export default axios
-

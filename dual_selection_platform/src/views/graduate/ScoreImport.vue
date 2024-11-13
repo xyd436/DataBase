@@ -44,7 +44,7 @@
           <a-table :columns="columns" :data="data" :scroll="scroll" :expandable="expandable"
                    :pagination="false" :bordered="{cell:true}" @change="handleChange" column-resizable
                    :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}">
-            <template #name-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
+            <template #stuname-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
               <div class="custom-filter">
                 <a-space direction="vertical">
                   <a-input :model-value="filterValue[0]" @input="(value)=>setFilterValue([value])" />
@@ -56,9 +56,9 @@
               </div>
             </template>
 <!--            编辑成绩状态-->
-            <template #initial_score="{ record }">
-              <a-input v-if="record.editable" v-model="record.initial_score" />
-              <span v-else>{{ record.initial_score }}</span>
+            <template #score="{ record }">
+              <a-input v-if="record.editable" v-model="record.score" />
+              <span v-else>{{ record.score }}</span>
             </template>
             <template #edit="{ record }">
               <a-space>
@@ -86,16 +86,16 @@
   </a-layout>
 </template>
 <script>
-import {defineComponent, onMounted} from 'vue';
+import {defineComponent, reactive, h} from 'vue';
+import {onMounted} from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'; // 引入 useRouter 钩子
 import {
   IconCaretRight,
   IconCaretLeft,
   IconCalendar,
+  IconSearch
 } from '@arco-design/web-vue/es/icon';
-import { reactive, h} from 'vue';
-import { IconSearch } from '@arco-design/web-vue/es/icon';
 import axios from "@/axios";
 
 //一键切换颜色模式
@@ -137,17 +137,17 @@ export default defineComponent({
     const columns = [
       {
         title: '姓名',
-        dataIndex: 'name',
+        dataIndex: 'stuname',
         fixed:'left',
         filterable: {
-          filter: (value, record) => record.name.includes(value),
-          slotName: 'name-filter',
+          filter: (value, record) => record.stuname.includes(value),
+          slotName: 'stuname-filter',
           icon: () => h(IconSearch),
         }
       },
       {
         title: '性别',
-        dataIndex: 'sex',
+        dataIndex: 'gender',
         filterable: {
           filters: [{
             text: '男',
@@ -156,21 +156,21 @@ export default defineComponent({
             text: '女',
             value: '女',
           },],
-          filter: (value, row) => row.sex.includes(value),
+          filter: (value, row) => row.gender.includes(value),
         }
       },
       {
         title: '准考证号',
-        dataIndex: 'exam_id',
+        dataIndex: 'id_number',
         filterable: {
-          filter: (value, record) => record.exam_id.includes(value),
-          slotName: 'name-filter',
+          filter: (value, record) => record.id_number.includes(value),
+          slotName: 'stuname-filter',
           icon: () => h(IconSearch),
         }
       },
       {
         title: '初试科目',
-        dataIndex: 'initial_course_name',
+        dataIndex: 'coursename',
         filterable: {
           filters: [{
             text: '101思想政治理论',
@@ -197,13 +197,13 @@ export default defineComponent({
             text: '840数据库原理与应用',
             value: '数据库原理与应用',
           },],
-          filter: (value, row) => row.initial_course_name.includes(value),
+          filter: (value, row) => row.coursename.includes(value),
         }
       },
       {
         title: '成绩',
-        dataIndex: 'initial_score',
-        slotName: 'initial_score',
+        dataIndex: 'score',
+        slotName: 'score',
         sortable: {
           sortDirections: ['ascend','descend']
         },
@@ -222,124 +222,37 @@ export default defineComponent({
     }
 
     //表格数据
-    const data = reactive([{
-      key: '1',
-      name: '陈卓妍',
-      sex: '女',
-      exam_id: '123456789012345',
-      initial_course_name: '数学一',
-      initial_score: '0',
+    const data = reactive([
+    {
+      stuname: '陈卓妍',
+      gender: '女',
+      id_number: '123456789012345',
+      coursename: '数学一',
+      score: '0',
     }, {
-      key: '2',
-      name: '陈卓妍',
-      sex: '女',
-      exam_id: '123456789012345',
-      initial_course_name: '英语一',
-      initial_score: '0',
-    }, {
-      key: '3',
-      name: '陈卓妍',
-      sex: '女',
-      exam_id: '123456789012345',
-      initial_course_name: '思想政治理论',
-      initial_score: '0',
-    }, {
-      key: '4',
-      name: '陈卓妍',
-      sex: '女',
-      exam_id: '123456789012345',
-      initial_course_name: '计算机学科专业基础',
-      initial_score: '0',
+      stuname: '陈卓妍',
+      gender: '女',
+      id_number: '123456789012345',
+      coursename: '英语一',
+      score: '0',
     },{
-      key: '5',
-      name: '丁佳欣',
-      sex: '女',
-      exam_id: '234567890123456',
-      initial_course_name: '数学一',
-      initial_score: '0',
+      stuname: '丁佳欣',
+      gender: '女',
+      id_number: '234567890123456',
+      coursename: '数学一',
+      score: '0',
     }, {
-      key: '6',
-      name: '丁佳欣',
-      sex: '女',
-      exam_id: '234567890123456',
-      initial_course_name: '英语一',
-      initial_score: '0',
-    }, {
-      key: '7',
-      name: '丁佳欣',
-      sex: '女',
-      exam_id: '234567890123456',
-      initial_course_name: '思想政治理论',
-      initial_score: '0',
-    }, {
-      key: '8',
-      name: '丁佳欣',
-      sex: '女',
-      exam_id: '234567890123456',
-      initial_course_name: '计算机学科专业基础',
-      initial_score: '0',
-    }, {
-      key: '9',
-      name: '苏畅',
-      sex: '女',
-      exam_id: '345678901234567',
-      initial_course_name: '数学一',
-      initial_score: '0',
-    }, {
-      key: '10',
-      name: '苏畅',
-      sex: '女',
-      exam_id: '345678901234567',
-      initial_course_name: '英语一',
-      initial_score: '0',
-    }, {
-      key: '11',
-      name: '夏羽迪',
-      sex: '女',
-      exam_id: '456789012345678',
-      initial_course_name: '思想政治理论',
-      initial_score: '0',
-    }, {
-      key: '12',
-      name: '夏羽迪',
-      sex: '女',
-      exam_id: '456789012345678',
-      initial_course_name: '计算机学科专业基础',
-      initial_score: '0',
-    }, {
-      key: '13',
-      name: '夏羽迪',
-      sex: '女',
-      exam_id: '456789012345678',
-      initial_course_name: '数学一',
-      initial_score: '0',
-    }, {
-      key: '14',
-      name: '夏羽迪',
-      sex: '女',
-      exam_id: '456789012345678',
-      initial_course_name: '英语一',
-      initial_score: '0',
-    }, {
-      key: '15',
-      name: '苏畅',
-      sex: '女',
-      exam_id: '345678901234567',
-      initial_course_name: '思想政治理论',
-      initial_score: '0',
-    }, {
-      key: '16',
-      name: '苏畅',
-      sex: '女',
-      exam_id: '345678901234567',
-      initial_course_name: '计算机学科专业基础',
-      initial_score: '0',
+      stuname: '丁佳欣',
+      gender: '女',
+      id_number: '234567890123456',
+      coursename: '英语一',
+      score: '0',
     }].map(item => ({ ...item, editable: false })));
 
-    // 获取招生数据
+    // 从数据库获取初始成绩数据
     const fetchData = async () => {
       try {
-        const response = await axios.get('/findAll');
+        const response = await axios.get('/findInitialViewAll');
         if (response.data && Array.isArray(response.data)) {
           console.log(response.data);
           data.splice(0, data.length, ...response.data);
@@ -383,15 +296,11 @@ export default defineComponent({
     }
   },
 
-  data(){
-    return {
-
-    }
-  },
-
-  mounted() {
-    axios.get()
-  }
+  // data() {
+  //   return {
+  //     expandable: false,  // 确保定义该属性
+  //   };
+  // },
 
 });
 </script>

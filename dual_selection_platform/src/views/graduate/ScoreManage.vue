@@ -44,7 +44,7 @@
           <a-table :columns="columns" :data="data" :scroll="scroll" column-resizable
                    :pagination="false" :bordered="{cell:true,wrapper: true}" @change="handleChange"
                    :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}" >
-            <template #name-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
+            <template #stuname-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
               <div class="custom-filter">
                 <a-space direction="vertical">
                   <a-input :model-value="filterValue[0]" @input="(value)=>setFilterValue([value])" />
@@ -56,9 +56,9 @@
               </div>
             </template>
 <!--            编辑成绩/综合评价-->
-            <template #second_score="{ record }">
-              <a-textarea v-if="record.editable" v-model="record.second_score" auto-size :max-length="50" allow-clear show-word-limit />
-              <span v-else>{{ record.second_score }}</span>
+            <template #score="{ record }">
+              <a-textarea v-if="record.editable" v-model="record.score" auto-size :max-length="50" allow-clear show-word-limit />
+              <span v-else>{{ record.score }}</span>
             </template>
             <!-- 编辑时间-->
             <template #time="{ record }">
@@ -105,16 +105,16 @@
   </a-layout>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import {defineComponent, onMounted, reactive, h} from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'; // 引入 useRouter 钩子
 import {
   IconCaretRight,
   IconCaretLeft,
   IconCalendar,
+  IconSearch
 } from '@arco-design/web-vue/es/icon';
-import { reactive, h} from 'vue';
-import { IconSearch } from '@arco-design/web-vue/es/icon';
+import axios from "axios";
 
 //一键切换颜色模式
 //document.body.setAttribute('arco-theme', 'dark')
@@ -150,21 +150,36 @@ export default defineComponent({
       }
     };
 
+    // 从数据库获取复试成绩数据
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/findSecondViewAll');
+        if (response.data && Array.isArray(response.data)) {
+          console.log(response.data);
+          data.splice(0, data.length, ...response.data);
+        } else {
+          console.error('Invalid data format:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch admissions data:', error);
+      }
+    };
+
     //表格
     const columns = [
       {
         title: '姓名',
-        dataIndex: 'name',
+        dataIndex: 'stuname',
         fixed:'left',
         filterable: {
-          filter: (value, record) => record.name.includes(value),
-          slotName: 'name-filter',
+          filter: (value, record) => record.stuname.includes(value),
+          slotName: 'stuname-filter',
           icon: () => h(IconSearch),
         }
       },
       {
         title: '性别',
-        dataIndex: 'sex',
+        dataIndex: 'gender',
         filterable: {
           filters: [{
             text: '男',
@@ -173,20 +188,20 @@ export default defineComponent({
             text: '女',
             value: '女',
           },],
-          filter: (value, row) => row.sex.includes(value),
+          filter: (value, row) => row.gender.includes(value),
         }
       },
       {
         title: '准考证号',
-        dataIndex: 'exam_id',
+        dataIndex: 'id_number',
         filterable: {
-          filter: (value, record) => record.exam_id.includes(value),
-          slotName: 'name-filter',
+          filter: (value, record) => record.id_number.includes(value),
+          slotName: 'stuname-filter',
           icon: () => h(IconSearch),
         }
       },{
         title: '复试科目',
-        dataIndex: 'second_course_name',
+        dataIndex: 'course',
         filterable: {
           filters: [{
             text: '外语听力与口语',
@@ -201,7 +216,7 @@ export default defineComponent({
             text: '综合评价',
             value: '综合评价',
           }],
-          filter: (value, row) => row.second_course_name.includes(value),
+          filter: (value, row) => row.course.includes(value),
         }
       },{
         title: '复试时间',
@@ -215,8 +230,8 @@ export default defineComponent({
       },
       {
         title: '成绩/综合评价',
-        dataIndex: 'second_score',
-        slotName: 'second_score',
+        dataIndex: 'score',
+        slotName: 'score',
       },
       {
         title: '编辑成绩',
@@ -233,22 +248,14 @@ export default defineComponent({
 
     //表格数据
     const data = reactive([
-      { key: '1', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '外语听力与口语', second_score: '0' },
-      { key: '2', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '专业知识测试', second_score: '0' },
-      { key: '3', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '综合素质面试', second_score: '0' },
-      { key: '4', name: '陈卓妍', sex: '女', exam_id: '123456789012345', second_course_name: '综合评价', second_score: '无' },
-      { key: '5', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '外语听力与口语', second_score: '0' },
-      { key: '6', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '专业知识测试', second_score: '0' },
-      { key: '7', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '综合素质面试', second_score: '0' },
-      { key: '8', name: '丁佳欣', sex: '女', exam_id: '234567890123456', second_course_name: '综合评价', second_score: '无' },
-      { key: '9', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '外语听力与口语', second_score: '0' },
-      { key: '10', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '专业知识测试', second_score: '0' },
-      { key: '11', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '综合素质面试', second_score: '0' },
-      { key: '12', name: '苏畅', sex: '女', exam_id: '345678901234567', second_course_name: '综合评价', second_score: '无' },
-      { key: '13', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '外语听力与口语', second_score: '0' },
-      { key: '14', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '专业知识测试', second_score: '0' },
-      { key: '15', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '综合素质面试', second_score: '0' },
-      { key: '16', name: '夏羽迪', sex: '女', exam_id: '456789012345678', second_course_name: '综合评价', second_score: '无' },
+      { stuname: '陈卓妍', gender: '女', id_number: '123456789012345', course: '综合素质面试', score: '0' },
+      { stuname: '陈卓妍', gender: '女', id_number: '123456789012345', course: '综合评价', score: '无' },
+      { stuname: '丁佳欣', gender: '女', id_number: '234567890123456', course: '外语听力与口语', score: '0' },
+      { stuname: '丁佳欣', gender: '女', id_number: '234567890123456', course: '综合评价', score: '无' },
+      { stuname: '苏畅', gender: '女', id_number: '345678901234567', course: '外语听力与口语', score: '0' },
+      { stuname: '苏畅', gender: '女', id_number: '345678901234567', course: '专业知识测试', score: '0' },
+      { stuname: '夏羽迪', gender: '女', id_number: '456789012345678', course: '综合素质面试', score: '0' },
+      { stuname: '夏羽迪', gender: '女', id_number: '456789012345678', course: '综合评价', score: '无' },
     ].map(item => ({ ...item, editable: false })));
 
     //处理编辑按钮
@@ -266,6 +273,10 @@ export default defineComponent({
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)
     }
+
+
+    // 组件挂载时获取数据
+    onMounted(fetchData);
 
     return {
       columns,
