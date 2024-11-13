@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.56.3",
+    "axios": "^1.7.7",
     "core-js": "^3.8.3",
+    "element-plus": "^2.8.7",
     "vue": "^3.2.13",
     "vue-router": "^4.4.5"
   },
