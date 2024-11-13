@@ -54,12 +54,12 @@ export default [
         component: () => import('../views/college/RecruitmentManagement.vue'),
         children: []
     },
-    {
-        path: '/addAdmissions',
-        name: 'AddAdmissions',
-        component: () => import('../views/college/addAdmissions.vue'),
-        children: []
-    }
+    // {
+    //     path: '/addAdmissions',
+    //     name: 'AddAdmissions',
+    //     component: () => import('../views/college/addAdmissions.vue'),
+    //     children: []
+    // }
 ]
 // {
 //     path: '/knowledgeGraph',
