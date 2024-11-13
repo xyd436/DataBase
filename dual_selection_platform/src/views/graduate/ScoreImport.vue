@@ -4,7 +4,7 @@
       <div class="logo" />
       <a-menu
           :default-open-keys="['1']"
-          :default-selected-keys="['0_3']"
+          :default-selected-keys="['1_1']"
           :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
@@ -12,8 +12,8 @@
           <template #title>
             <IconCalendar></IconCalendar> 考生管理
           </template>
-          <a-menu-item key="1_1">成绩导入</a-menu-item>
-          <a-menu-item key="1_2">成绩管理</a-menu-item>
+          <a-menu-item key="1_1">初试成绩管理</a-menu-item>
+          <a-menu-item key="1_2">复试成绩管理</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="2">
@@ -37,14 +37,14 @@
       <a-layout style="padding: 0 20px;">
         <a-breadcrumb :style="{ margin: '14px 0' }">
           <a-breadcrumb-item>考生管理</a-breadcrumb-item>
-          <a-breadcrumb-item>成绩导入</a-breadcrumb-item>
+          <a-breadcrumb-item>初试成绩管理</a-breadcrumb-item>
         </a-breadcrumb>
         <a-layout-content>
 <!--          内容展示部分-->
           <a-table :columns="columns" :data="data" :scroll="scroll" :expandable="expandable"
                    :pagination="false" :bordered="{cell:true}" @change="handleChange" column-resizable
-                   :style="{fontSize: '16px'}">
-            <template #name-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
+                   :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}">
+            <template #stuname-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
               <div class="custom-filter">
                 <a-space direction="vertical">
                   <a-input :model-value="filterValue[0]" @input="(value)=>setFilterValue([value])" />
@@ -55,28 +55,48 @@
                 </a-space>
               </div>
             </template>
+<!--            编辑成绩状态-->
+            <template #score="{ record }">
+              <a-input v-if="record.editable" v-model="record.score" />
+              <span v-else>{{ record.score }}</span>
+            </template>
+            <template #edit="{ record }">
+              <a-space>
+                <a-button type="primary" status="warning" v-if="!record.editable" @click="handleEdit(record)">编辑</a-button>
+                <a-button type="primary" status="success" v-if="!record.editable" disabled>保存</a-button>
+              </a-space>
+              <a-space>
+                <a-button type="primary" status="warning" v-if="record.editable" disabled>编辑</a-button>
+                <a-button type="primary" status="success" v-if="record.editable"  @click="handleSave(record)" >保存</a-button>
+              </a-space>
+            </template>
           </a-table>
+
+<!--          上传所有成绩按钮-->
+          <a-button @click="handleSubmit" type="primary">上传所有成绩</a-button>
         </a-layout-content>
 
-        <a-layout-footer>
-<!--          页脚部分-->
-          Footer
-        </a-layout-footer>
+
+<!--        <a-layout-footer>-->
+<!--&lt;!&ndash;          页脚部分&ndash;&gt;-->
+<!--          Footer-->
+<!--        </a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import {defineComponent, reactive, h} from 'vue';
+import {onMounted} from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'; // 引入 useRouter 钩子
 import {
   IconCaretRight,
   IconCaretLeft,
   IconCalendar,
+  IconSearch
 } from '@arco-design/web-vue/es/icon';
-import { reactive, h } from 'vue';
-import { IconSearch } from '@arco-design/web-vue/es/icon';
+import axios from "@/axios";
 
 //一键切换颜色模式
 //document.body.setAttribute('arco-theme', 'dark')
@@ -88,16 +108,16 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter(); // 使用 useRouter 钩子
-
+    //页面跳转设置
     const onClickMenuItem = (key) => {
       switch (key) {
         case '1_1':
-          router.push('/'); // 跳转到成绩导入页面
-          Message.info({ content: `跳转到成绩导入页面`, showIcon: true });
+          router.push('/'); // 跳转到初试成绩管理页面
+          Message.info({ content: `跳转到初试成绩管理页面`, showIcon: true });
           break;
         case '1_2':
-          router.push('/ScoreManage'); // 跳转到成绩管理页面
-          Message.info({ content: `跳转到成绩管理页面`, showIcon: true });
+          router.push('/ScoreManage'); // 跳转到复试成绩管理页面
+          Message.info({ content: `跳转到复试成绩管理页面`, showIcon: true });
           break;
         case '2_1':
           router.push('/InfoRetest'); // 跳转到复试信息审核页面
@@ -113,100 +133,175 @@ export default defineComponent({
       }
     };
 
+    //表格表头设置
     const columns = [
       {
         title: '姓名',
-        dataIndex: 'name',
+        dataIndex: 'stuname',
         fixed:'left',
         filterable: {
-          filter: (value, record) => record.name.includes(value),
-          slotName: 'name-filter',
+          filter: (value, record) => record.stuname.includes(value),
+          slotName: 'stuname-filter',
           icon: () => h(IconSearch),
         }
       },
       {
         title: '性别',
-        dataIndex: 'sex',
+        dataIndex: 'gender',
+        filterable: {
+          filters: [{
+            text: '男',
+            value: '男',
+          }, {
+            text: '女',
+            value: '女',
+          },],
+          filter: (value, row) => row.gender.includes(value),
+        }
       },
       {
         title: '准考证号',
-        dataIndex: 'exam_id',
+        dataIndex: 'id_number',
+        filterable: {
+          filter: (value, record) => record.id_number.includes(value),
+          slotName: 'stuname-filter',
+          icon: () => h(IconSearch),
+        }
       },
       {
-        title: '初始成绩',
-        children:[{
-          title: '科目',
-          dataIndex: 'initial_course_name',
-        },{
-          title: '成绩',
-          dataIndex: 'initial_score'
-        }]
+        title: '初试科目',
+        dataIndex: 'coursename',
+        filterable: {
+          filters: [{
+            text: '101思想政治理论',
+            value: '思想政治理论',
+          }, {
+            text: '201英语一',
+            value: '英语一',
+          },{
+            text: '204英语二',
+            value: '英语二',
+          },{
+            text: '301数学一',
+            value: '数学一',
+          },{
+            text: '302数学二',
+            value: '数学二',
+          },{
+            text: '341农业知识综合',
+            value: '农业知识综合',
+          },{
+            text: '408计算机学科专业基础',
+            value: '计算机学科专业基础',
+          },{
+            text: '840数据库原理与应用',
+            value: '数据库原理与应用',
+          },],
+          filter: (value, row) => row.coursename.includes(value),
+        }
       },
       {
-        title: '复试成绩',
-        children: [{
-          title: '科目',
-          dataIndex: 'second_course_name',
-        },{
-          title: '成绩',
-          dataIndex: 'second_score'
-        }]
+        title: '成绩',
+        dataIndex: 'score',
+        slotName: 'score',
+        sortable: {
+          sortDirections: ['ascend','descend']
+        },
       },
       {
-        title: '状态',
-        dataIndex: 'status'
+        title: '编辑成绩',
+        dataIndex: 'edit',
+        slotName: 'edit',
       }
     ];
 
+    //表格滑动
     const scroll = {
       x:1000,
-      y:500
+      y:520
     }
 
-    const data = reactive([{
-      key: '1',
-      name: 'Jane Doe',
-      sex: '男',
-      initial_course_name: '数学一',
-      initial_score: '123',
+    //表格数据
+    const data = reactive([
+    {
+      stuname: '陈卓妍',
+      gender: '女',
+      id_number: '123456789012345',
+      coursename: '数学一',
+      score: '0',
     }, {
-      key: '2',
-      name: 'Alisa Ross',
-      sex: '女',
-      initial_course_name: '英语一',
-      initial_score: '88',
+      stuname: '陈卓妍',
+      gender: '女',
+      id_number: '123456789012345',
+      coursename: '英语一',
+      score: '0',
+    },{
+      stuname: '丁佳欣',
+      gender: '女',
+      id_number: '234567890123456',
+      coursename: '数学一',
+      score: '0',
     }, {
-      key: '3',
-      name: 'Kevin Sandra',
-      sex: '男',
-      initial_course_name: '思想政治',
-      initial_score: '83',
-    }, {
-      key: '4',
-      name: 'Ed Hellen',
-      sex: '女',
-      initial_course_name: '408计算机基础',
-      initial_score: '103',
-    }, {
-      key: '5',
-      name: 'William Smith',
-      sex: '男',
-      initial_course_name: '数学一',
-      initial_score: '100',
-    }]);
+      stuname: '丁佳欣',
+      gender: '女',
+      id_number: '234567890123456',
+      coursename: '英语一',
+      score: '0',
+    }].map(item => ({ ...item, editable: false })));
 
+    // 从数据库获取初始成绩数据
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/findInitialViewAll');
+        if (response.data && Array.isArray(response.data)) {
+          console.log(response.data);
+          data.splice(0, data.length, ...response.data);
+        } else {
+          console.error('Invalid data format:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch admissions data:', error);
+      }
+    };
+
+    //处理编辑按钮
+    const handleEdit = (record) => {
+      record.editable = true;
+    };
+    //处理数据保存
+    const handleSave = (record) => {
+      record.editable = false;
+    };
+    //处理数据提交
+    const handleSubmit = () => {
+      console.log('提交数据：', data);
+    };
+    //处理？？
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)
     }
+
+    // 组件挂载时获取数据
+    onMounted(fetchData);
 
     return {
       columns,
       data,
       scroll,
       handleChange,
+      handleEdit,
+      handleSave,
+      handleSubmit,
       onClickMenuItem
     }
   },
+
+  // data() {
+  //   return {
+  //     expandable: false,  // 确保定义该属性
+  //   };
+  // },
+
 });
 </script>
 <style scoped>

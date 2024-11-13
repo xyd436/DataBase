@@ -4,7 +4,7 @@
       <div class="logo" />
       <a-menu
           :default-open-keys="['1']"
-          :default-selected-keys="['0_3']"
+          :default-selected-keys="['2_1']"
           :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
@@ -12,8 +12,8 @@
           <template #title>
             <IconCalendar></IconCalendar> 考生管理
           </template>
-          <a-menu-item key="1_1">成绩导入</a-menu-item>
-          <a-menu-item key="1_2">成绩管理</a-menu-item>
+          <a-menu-item key="1_1">初试成绩管理</a-menu-item>
+          <a-menu-item key="1_2">复试成绩管理</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="2">
@@ -39,13 +39,21 @@
           <a-breadcrumb-item>录取管理</a-breadcrumb-item>
           <a-breadcrumb-item>复试信息审核</a-breadcrumb-item>
         </a-breadcrumb>
-        <a-layout-content>Content</a-layout-content>
+        <a-layout-content>
+          <template>
+            <a-table :columns="columns" :data="data" />
+          </template>
+        </a-layout-content>
         <a-layout-footer>Footer</a-layout-footer>
       </a-layout>
     </a-layout>
   </a-layout>
 </template>
+
 <script>
+import {onMounted} from 'vue';
+import axios from "axios";
+import {reactive} from "vue";
 import { defineComponent } from 'vue';
 import { Message } from '@arco-design/web-vue';
 import { useRouter } from 'vue-router'; // 引入 useRouter 钩子
@@ -63,16 +71,90 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter(); // 使用 useRouter 钩子
+    const columns = [
+      {
+        title: 'id',
+        dataIndex: 'id',
+        ellipsis: true,
+        tooltip: true,
+        width: 100
+      },
+      {
+        title: 'score',
+        dataIndex: 'score',
+      },
+      {
+        title: 'student_id',
+        dataIndex: 'student_id',
+        ellipsis: true,
+        width: 150,
+      },
+      {
+        title: 'course_id',
+        dataIndex: 'course_id',
+        ellipsis: true,
+        tooltip: {position: 'left'},
+        width: 200,
+      },
+    ];
+    const data = reactive([{
+      key: '1',
+      name: 'Jane Doe',
+      score: 23000,
+      student_id: '32 Park Road, London',
+      course_id: 'jane.doe@example.com'
+    }, {
+      key: '2',
+      name: 'Alisa Ross',
+      score: 25000,
+      student_id: '35 Park Road, London',
+      course_id: 'alisa.ross@example.com'
+    }, {
+      key: '3',
+      name: 'Kevin Sandra',
+      score: 22000,
+      student_id: '31 Park Road, London',
+      course_id: 'kevin.sandra@example.com'
+    }, {
+      key: '4',
+      name: 'Ed Hellen',
+      score: 17000,
+      student_id: '42 Park Road, London',
+      course_id: 'ed.hellen@example.com'
+    }, {
+      key: '5',
+      name: 'William Smith',
+      score: 27000,
+      student_id: '62 Park Road, London',
+      course_id: 'william.smith@example.com'
+    }]);
+
+    // 获取招生数据
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/findAll');
+        if (response.data && Array.isArray(response.data)) {
+          console.log(response.data);
+          data.splice(0, data.length, ...response.data);
+        } else {
+          console.error('Invalid data format:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch admissions data:', error);
+      }
+    };
+
+    onMounted(fetchData);
 
     const onClickMenuItem = (key) => {
       switch (key) {
         case '1_1':
-          router.push('/'); // 跳转到成绩导入页面
-          Message.info({ content: `跳转到成绩导入页面`, showIcon: true });
+          router.push('/'); // 跳转到初试成绩管理页面
+          Message.info({ content: `跳转到初试成绩管理页面`, showIcon: true });
           break;
         case '1_2':
-          router.push('/ScoreManage'); // 跳转到成绩管理页面
-          Message.info({ content: `跳转到成绩管理页面`, showIcon: true });
+          router.push('/ScoreManage'); // 跳转到复试成绩管理页面
+          Message.info({ content: `跳转到复试成绩管理页面`, showIcon: true });
           break;
         case '2_1':
           router.push('/InfoRetest'); // 跳转到复试信息审核页面
@@ -90,10 +172,13 @@ export default defineComponent({
 
     return {
       onClickMenuItem,
+      columns,
+      data
     };
   }
 });
 </script>
+
 <style scoped>
 .layout-demo {
   height: 100vh;
@@ -137,3 +222,4 @@ export default defineComponent({
   text-align: center;
 }
 </style>
+

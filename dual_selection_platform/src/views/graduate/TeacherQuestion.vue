@@ -4,7 +4,7 @@
       <div class="logo" />
       <a-menu
           :default-open-keys="['1']"
-          :default-selected-keys="['0_3']"
+          :default-selected-keys="['2_2']"
           :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
@@ -13,8 +13,8 @@
             <icon-user-group />
             <IconCalendar></IconCalendar> 考生管理
           </template>
-          <a-menu-item key="1_1">成绩导入</a-menu-item>
-          <a-menu-item key="1_2">成绩管理</a-menu-item>
+          <a-menu-item key="1_1">初试成绩管理</a-menu-item>
+          <a-menu-item key="1_2">复试成绩管理</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="2">
@@ -68,12 +68,12 @@ export default defineComponent({
     const onClickMenuItem = (key) => {
       switch (key) {
         case '1_1':
-          router.push('/'); // 跳转到成绩导入页面
-          Message.info({ content: `跳转到成绩导入页面`, showIcon: true });
+          router.push('/'); // 跳转到初试成绩管理页面
+          Message.info({ content: `跳转到初试成绩管理页面`, showIcon: true });
           break;
         case '1_2':
-          router.push('/ScoreManage'); // 跳转到成绩管理页面
-          Message.info({ content: `跳转到成绩管理页面`, showIcon: true });
+          router.push('/ScoreManage'); // 跳转到复试成绩管理页面
+          Message.info({ content: `跳转到复试成绩管理页面`, showIcon: true });
           break;
         case '2_1':
           router.push('/InfoRetest'); // 跳转到复试信息审核页面
