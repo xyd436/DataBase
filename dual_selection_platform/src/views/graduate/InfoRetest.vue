@@ -4,7 +4,7 @@
       <div class="logo" />
       <a-menu
           :default-open-keys="['1']"
-          :default-selected-keys="['2_1']"
+          :default-selected-keys="['2_2']"
           :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
@@ -20,8 +20,9 @@
           <template #title>
             <IconCalendar></IconCalendar> 录取管理
           </template>
-          <a-menu-item key="2_1">复试信息审核</a-menu-item>
-          <a-menu-item key="2_2">复试导师质疑</a-menu-item>
+          <a-menu-item key="2_1">复试导师质疑</a-menu-item>
+          <a-menu-item key="2_2">复试信息审核</a-menu-item>
+          <a-menu-item key="2_3">录取结果发布</a-menu-item>
         </a-sub-menu>
       </a-menu>
       <!-- trigger -->
@@ -37,7 +38,7 @@
       <a-layout style="padding: 0 20px;">
         <a-breadcrumb :style="{ margin: '14px 0' }">
           <a-breadcrumb-item>录取管理</a-breadcrumb-item>
-          <a-breadcrumb-item>复试信息审核</a-breadcrumb-item>
+          <a-breadcrumb-item>复试信息审核（审核考生的信息）</a-breadcrumb-item>
         </a-breadcrumb>
         <a-layout-content>
           <template>
@@ -157,12 +158,16 @@ export default defineComponent({
           Message.info({ content: `跳转到复试成绩管理页面`, showIcon: true });
           break;
         case '2_1':
+          router.push('/TeacherQuestion'); // 跳转到复试导师质疑页面
+          Message.info({ content: `跳转到复试导师质疑页面`, showIcon: true });
+          break;
+        case '2_2':
           router.push('/InfoRetest'); // 跳转到复试信息审核页面
           Message.info({ content: `跳转到复试信息审核页面`, showIcon: true });
           break;
-        case '2_2':
-          router.push('/TeacherQuestion'); // 跳转到复试导师质疑页面
-          Message.info({ content: `跳转到复试导师质疑页面`, showIcon: true });
+        case '2_3':
+          router.push('/ResultRelease'); // 跳转到录取信息发布页面
+          Message.info({ content: `跳转到录取信息发布页面`, showIcon: true });
           break;
         default:
           // 其他情况可以不做处理或者跳转到默认页面

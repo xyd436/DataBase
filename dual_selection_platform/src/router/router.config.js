@@ -1,12 +1,12 @@
 export default [
     {
-        path: '/',
+        path: '/CollegeIndex',
         name: 'CollegeIndex',
         component: () => import('../views/college/CollegeIndex.vue'),
         children: []
     },
     {
-        path: '/ScoreImport',
+        path: '/',
         name: 'ScoreImport',
         component: () => import('../views/graduate/ScoreImport.vue'),
         children: []
@@ -29,7 +29,12 @@ export default [
         component: () => import('../views/graduate/TeacherQuestion.vue'),
         children: []
     },
-
+    {
+        path: '/ResultRelease',
+        name: 'ResultRelease',
+        component: () => import('../views/graduate/ResultRelease.vue'),
+        children: []
+    },
     {
         path: '/CandidateVolunteer',
         name: 'CandidateVolunteer',
@@ -54,12 +59,12 @@ export default [
         component: () => import('../views/college/RecruitmentManagement.vue'),
         children: []
     },
-    {
-        path: '/addAdmissions',
-        name: 'AddAdmissions',
-        component: () => import('../views/college/addAdmissions.vue'),
-        children: []
-    }
+    // {
+    //     path: '/addAdmissions',
+    //     name: 'AddAdmissions',
+    //     component: () => import('../views/college/addAdmissions.vue'),
+    //     children: []
+    // }
 ]
 // {
 //     path: '/knowledgeGraph',
