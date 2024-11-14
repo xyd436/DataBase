@@ -129,7 +129,7 @@ export default defineComponent({
     const onClickMenuItem = (key) => {
       switch (key) {
         case '1_1':
-          router.push('/'); // 跳转到初试成绩管理页面
+          router.push('/ScoreImport'); // 跳转到初试成绩管理页面
           Message.info({ content: `跳转到初试成绩管理页面`, showIcon: true });
           break;
         case '1_2':

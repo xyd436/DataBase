@@ -5,6 +5,12 @@ export default [
         component: () => import('../views/college/CollegeIndex.vue'),
         children: []
     },
+    // {
+    //     path: '/',
+    //     name: 'InfoRetest',
+    //     component: () => import('../views/graduate/InfoRetest.vue'),
+    //     children: []
+    // },
     {
         path: '/ScoreImport',
         name: 'ScoreImport',
@@ -40,6 +46,12 @@ export default [
         path: '/MentorManagement',
         name: 'MentorManagement',
         component: () => import('../views/college/MentorManagement.vue'),
+        children: []
+    },
+    {
+        path: '/MentorQualification',
+        name: 'MentorQualification',
+        component: () => import('../views/college/MentorQualification.vue'),
         children: []
     },
     {
