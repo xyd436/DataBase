@@ -2,9 +2,9 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:612'
+axios.defaults.baseURL = 'http://localhost:4216'
 // axios.defaults.headers.common.Authorization = 'qxc'
-axios.defaults.headers.common.Authorization = null;
+axios.defaults.headers.common.Authorization = 'djx';
 
 axios.interceptors.request.use(config => {
     // 在发送请求之前做些什么

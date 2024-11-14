@@ -5,6 +5,12 @@ export default [
         component: () => import('../views/college/CollegeIndex.vue'),
         children: []
     },
+    // {
+    //     path: '/',
+    //     name: 'InfoRetest',
+    //     component: () => import('../views/graduate/InfoRetest.vue'),
+    //     children: []
+    // },
     {
         path: '/ScoreImport',
         name: 'ScoreImport',
@@ -43,6 +49,12 @@ export default [
         children: []
     },
     {
+        path: '/MentorQualification',
+        name: 'MentorQualification',
+        component: () => import('../views/college/MentorQualification.vue'),
+        children: []
+    },
+    {
         path: '/MentorSelection',
         name: 'MentorSelection',
         component: () => import('../views/college/MentorSelection.vue'),
@@ -54,30 +66,10 @@ export default [
         component: () => import('../views/college/RecruitmentManagement.vue'),
         children: []
     },
-    {
-        path: '/addAdmissions',
-        name: 'AddAdmissions',
-        component: () => import('../views/college/addAdmissions.vue'),
-        children: []
-    }
+    // {
+    //     path: '/addAdmissions',
+    //     name: 'AddAdmissions',
+    //     component: () => import('../views/college/addAdmissions.vue'),
+    //     children: []
+    // }
 ]
-// {
-//     path: '/knowledgeGraph',
-//     name: 'knowledgeGraph',
-//     component: () => import('../views/KnowledgeGraph/KnowledgeGraph.vue'),
-// },
-// {
-//     path: '/knowledgeGraph/:entityName',
-//     name: 'knowledgeGraphWithParam',
-//     component: () => import('../views/KnowledgeGraph/KnowledgeGraph.vue'),
-// },
-// {
-//     path: '/knowledgeImport',
-//     name: 'knowledgeImport',
-//     component: () => import('../views/KnowledgeImport/KnowledgeImport.vue'),
-// },
-// {
-//     path: '/knowledgeEdit',
-//     name: 'knowledgeEdit',
-//     component: () => import('../views/KnowledgeImport/KnowledgeEdit.vue'),
-// }
