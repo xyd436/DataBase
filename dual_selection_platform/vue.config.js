@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
 
   devServer:{
-    port:4126,
+    port:8080,
     webSocketServer:false,
   }
 })

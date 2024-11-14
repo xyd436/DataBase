@@ -4,7 +4,7 @@
       <div class="logo" />
       <a-menu
           :default-open-keys="['1']"
-          :default-selected-keys="['2_2']"
+          :default-selected-keys="['2_3']"
           :style="{ width: '100%'}"
           @menu-item-click="onClickMenuItem"
       >
@@ -38,7 +38,7 @@
       <a-layout style="padding: 0 20px;">
         <a-breadcrumb :style="{ margin: '14px 0' }">
           <a-breadcrumb-item>录取管理</a-breadcrumb-item>
-          <a-breadcrumb-item>复试信息审核（审核考生的信息）</a-breadcrumb-item>
+          <a-breadcrumb-item>录取结果发布</a-breadcrumb-item>
         </a-breadcrumb>
         <a-layout-content>
           <template>
@@ -104,30 +104,6 @@ export default defineComponent({
       score: 23000,
       student_id: '32 Park Road, London',
       course_id: 'jane.doe@example.com'
-    }, {
-      key: '2',
-      name: 'Alisa Ross',
-      score: 25000,
-      student_id: '35 Park Road, London',
-      course_id: 'alisa.ross@example.com'
-    }, {
-      key: '3',
-      name: 'Kevin Sandra',
-      score: 22000,
-      student_id: '31 Park Road, London',
-      course_id: 'kevin.sandra@example.com'
-    }, {
-      key: '4',
-      name: 'Ed Hellen',
-      score: 17000,
-      student_id: '42 Park Road, London',
-      course_id: 'ed.hellen@example.com'
-    }, {
-      key: '5',
-      name: 'William Smith',
-      score: 27000,
-      student_id: '62 Park Road, London',
-      course_id: 'william.smith@example.com'
     }]);
 
     // 获取招生数据
