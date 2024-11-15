@@ -20,4 +20,16 @@ public class CandidateChoicesController {
     public List<CandidateChoices> selectAllChoices_Status_Scores() {
         return candidateChoicesService.selectAllChoices_Status_Scores();
     }
+
+    @ApiOperation("导师质疑表")
+    @GetMapping("/selectAllQuestion")
+    public List<CandidateChoices> selectAllQuestion() {
+        return candidateChoicesService.selectAllQuestion();
+    }
+
+    @ApiOperation("录取结果发布表")
+    @GetMapping("/selectAllResult")
+    public List<CandidateChoices> selectAllResult() {
+        return candidateChoicesService.selectAllResult();
+    }
 }

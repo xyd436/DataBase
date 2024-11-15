@@ -22,4 +22,24 @@ public class CandidateChoicesService {
     public List<CandidateChoices> selectAllChoices_Status_Scores() {
         return candidateChoicesMapper.selectAllChoices_Status_Scores();
     }
+
+    /**
+     * 查询所有质疑信息
+     *
+     * @param
+     * @return List<Candidatechoices>
+     */
+    public List<CandidateChoices> selectAllQuestion(){
+        return candidateChoicesMapper.selectAllQuestion();
+    }
+
+    /**
+     * 查询所有录取结果
+     *
+     * @param
+     * @return List<Candidatechoices>
+     */
+    public List<CandidateChoices> selectAllResult(){
+        return candidateChoicesMapper.selectAllResult();
+    }
 }

@@ -38,4 +38,10 @@ public class  CandidateChoices {
     private String InitialScores;
     @ApiModelProperty(value = "复试成绩", required = true)
     private String SecondScores;
+    @ApiModelProperty(value = "导师工号", required = true)
+    private String MentorID;
+    @ApiModelProperty(value = "导师总招生指标", required = true)
+    private String TotalQuota;
+    @ApiModelProperty(value = "导师已招生人数", required = true)
+    private String AdmittedQuota;
 }
