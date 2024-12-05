@@ -12,4 +12,6 @@ public class SecondScoreImportService {
     public List<SecondScoreImport> findSecondViewAll() {
         return secondScoreImportMapper.findSecondViewAll();
     }
+
+
 }

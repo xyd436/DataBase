@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 //@ApiModel：这是 Swagger 框架提供的注解，用于描述一个模型类。这个注解的作用是将模型类描述为一个 API 文档的模型，可以通过该注解指定模型类的名称和描述信息
 @ApiModel("考试科目")
 
-public class  Cource{
+public class Course {
         //    @ApiModelProperty：也是 Swagger 框架提供的注解，用于描述模型类中的属性信息。该注解可以设置属性的名称、描述、是否必需等信息，以便在 Swagger 生成的 API 文档中显
         @ApiModelProperty(value = "科目ID", required = true)
         private int id;

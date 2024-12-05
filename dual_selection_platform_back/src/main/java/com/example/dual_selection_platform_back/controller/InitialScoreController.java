@@ -22,9 +22,9 @@ public class InitialScoreController {
         return initialScoreService.findAll();
     }
 
-    @ApiOperation("通过用户id以及科目id更新成绩score")
-    @PostMapping("/findByStuId/{score}/{student_id}/{course_id}")
-    public void updateScore(@PathVariable int score,@PathVariable int student_id,@PathVariable int course_id){
+    @ApiOperation("更新初试成绩")
+    @PutMapping("/updateScore/{score}/{student_id}/{course_id}")
+    public void updateScore(@PathVariable double score,@PathVariable int student_id,@PathVariable int course_id) {
         initialScoreService.updateScore(score,student_id,course_id);
     }
 }

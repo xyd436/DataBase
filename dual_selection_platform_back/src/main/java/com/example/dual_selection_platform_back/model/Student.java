@@ -3,7 +3,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @lombok.Data
 @NoArgsConstructor
@@ -27,6 +31,7 @@ public class Student {
     private String exam_id;
 
     @ApiModelProperty(value = "出生日期", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date birth;
 
     @ApiModelProperty(value = "个人简介", required = false)

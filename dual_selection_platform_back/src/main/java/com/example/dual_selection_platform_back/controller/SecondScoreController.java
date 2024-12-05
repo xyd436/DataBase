@@ -6,7 +6,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 import java.util.List;
 
 @Api(tags = "API接口")
@@ -22,9 +25,9 @@ public class SecondScoreController {
         return secondScoreService.findAllSecond();
     }
 
-    @ApiOperation("更新复试成绩、时间地点")
-    @PostMapping("/updateInfo")
-    public void updateInfo(@RequestBody SecondScore secondScore) {
-        secondScoreService.updateInfo(secondScore);
+    @ApiOperation("更新复试信息")
+    @PutMapping("/updateSecondInfo/{time}/{location}/{score}/{course}/{student_id}")
+    public void updateSecondInfo(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd")Date time, @PathVariable String location, @PathVariable String score, @PathVariable String course, @PathVariable int student_id) {
+        secondScoreService.updateSecondInfo(time,location,score,course,student_id);
     }
 }
