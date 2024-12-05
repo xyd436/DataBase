@@ -24,5 +24,5 @@ public interface InitialScoreMapper {
 
     //更改成绩
     @Update("update InitialScore set score=#{score} where student_id=#{student_id} and course_id=#{course_id}")
-    void updateScore(@Param("score") int score, @Param("student_id") int student_id, @Param("course_id") int course_id);
+    void updateScore(@Param("score") double score, @Param("student_id") int student_id, @Param("course_id")int course_id);
 }

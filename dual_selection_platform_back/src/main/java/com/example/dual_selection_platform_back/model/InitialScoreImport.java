@@ -25,46 +25,6 @@ public class InitialScoreImport {
     @ApiModelProperty(value = "科目名称", required = true)
     private String coursename;
 
-    public String getCoursename() {
-        return coursename;
-    }
-
-    public void setCoursename(String coursename) {
-        this.coursename = coursename;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getId_number() {
-        return id_number;
-    }
-
-    public void setId_number(String id_number) {
-        this.id_number = id_number;
-    }
-
-    public String getStuname() {
-        return stuname;
-    }
-
-    public void setStuname(String stuname) {
-        this.stuname = stuname;
-    }
-
-    public String getScore() {
-        return score;
-    }
-
-    public void setScore(String score) {
-        this.score = score;
-    }
-
     @ApiModelProperty(value = "成绩", required = true)
     private String score;
 }

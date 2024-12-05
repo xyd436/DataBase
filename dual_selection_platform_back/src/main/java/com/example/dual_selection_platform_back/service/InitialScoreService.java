@@ -4,6 +4,8 @@ import com.example.dual_selection_platform_back.mapper.InitialScoreMapper;
 import com.example.dual_selection_platform_back.model.InitialScore;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired; // 导入Autowired注解
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -15,7 +17,8 @@ public class InitialScoreService{
      * 更新信息
      * @param score
      */
-    public void updateScore(int score, int student_id,int course_id){
+    @Transactional
+    public void updateScore(double score,int student_id,int course_id) {
         initialscoremapper.updateScore(score,student_id,course_id);
     }
 
