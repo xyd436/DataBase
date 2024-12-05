@@ -44,7 +44,7 @@
 <!--          内容展示部分-->
           <a-table :columns="columns" :data="data" :scroll="scroll" :expandable="expandable"
                    :pagination="false" :bordered="{cell:true}" @change="handleChange" column-resizable
-                   :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}">
+                   :style="{fontSize: '16px',height: '99%',fontFamily:'微软雅黑'}">
             <template #stuname-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
               <div class="custom-filter">
                 <a-space direction="vertical">
@@ -72,9 +72,6 @@
               </a-space>
             </template>
           </a-table>
-
-<!--          上传所有成绩按钮-->
-          <a-button @click="handleSubmit" type="primary">上传所有成绩</a-button>
         </a-layout-content>
 
 
@@ -99,8 +96,6 @@ import {
 } from '@arco-design/web-vue/es/icon';
 import axios from "@/axios";
 
-//一键切换颜色模式
-// document.body.setAttribute('arco-theme', 'dark')
 export default defineComponent({
   components: {
     IconCaretRight,
@@ -223,7 +218,7 @@ export default defineComponent({
     //表格滑动
     const scroll = {
       x:1000,
-      y:520
+      y:550
     }
 
     //表格数据
@@ -268,7 +263,6 @@ export default defineComponent({
         console.error('Failed to fetch admissions data:', error);
       }
     };
-
     //处理编辑按钮
     const handleEdit = (record) => {
       record.editable = true;
@@ -276,12 +270,21 @@ export default defineComponent({
     //处理数据保存
     const handleSave = (record) => {
       record.editable = false;
+      console.log('record: ', record);
+
+      const score=record.score;
+      const stuname=record.stuname;
+      const coursename=record.coursename;
+
+      axios.put(`http://localhost:4126/updateInitialScore/${score}/${stuname}/${coursename}`,)
+      .then(res => {
+        console.log("更新成功",res.data)
+      })
+      .catch(err => {
+        console.log("更新失败",err);
+      })
     };
-    //处理数据提交
-    const handleSubmit = () => {
-      console.log('提交数据：', data);
-    };
-    //处理？？
+    //处理编辑
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)
     }
@@ -296,17 +299,9 @@ export default defineComponent({
       handleChange,
       handleEdit,
       handleSave,
-      handleSubmit,
       onClickMenuItem
     }
   },
-
-  // data() {
-  //   return {
-  //     expandable: false,  // 确保定义该属性
-  //   };
-  // },
-
 });
 </script>
 <style scoped>
