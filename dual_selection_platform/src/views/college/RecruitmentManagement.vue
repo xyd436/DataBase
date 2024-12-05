@@ -3,8 +3,8 @@
     <a-layout-sider collapsible breakpoint="xl">
       <div class="logo" />
       <a-menu
-          :default-open-keys="['3']"
-          :default-selected-keys="['/RecruitmentManagement']"
+          :default-open-keys="['2','3']"
+          :default-selected-keys="['/']"
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
       >
@@ -12,10 +12,14 @@
           <IconHome></IconHome>
           首页
         </a-menu-item>
-        <a-menu-item key="/MentorManagement">
-          <icon-user-group />
-          导师管理
-        </a-menu-item>
+
+        <a-sub-menu key="2">
+          <template #title>
+            <icon-user-group /> 导师管理
+          </template>
+          <a-menu-item key="/MentorManagement">导师遴选</a-menu-item>
+          <a-menu-item key="/MentorQualification">导师资格审查</a-menu-item>
+        </a-sub-menu>
 
         <a-sub-menu key="3">
           <template #title>
@@ -55,17 +59,26 @@
         </a-space>
 
         <!-- content -->
-        <a-layout-content>
-          <!--   招生目录表格显示       -->
+        <a-layout-content style="height: 1000px;">
           <!-- 表格组件，绑定 columns 和 data 属性 -->
           <a-table :columns="columns"
                    :data="admissionsData"
-                   :span-method="spanMethodAll" span-all
-                   column-resizable
+                   :span-method="spanMethodAll"
+                   :row-key="record => record.key"
+                   :virtual-scroll="{ itemSize: 50 }"
                    :bordered="{wrapper: true, cell: true}"
+                   :style="{height: '100%'}"
                    :sticky-header="0"
                    :stripe="true"
+                   :pagination="pagination"
           />
+          <!-- 分页器 -->
+          <a-pagination :current="currentPage"
+                        :total="totalItems"
+                        :page-size="pageSize"
+                        @change="handlePageChange"
+          />
+
           <!--            &lt;!&ndash; 自定义列过滤器的模板 &ndash;&gt;-->
           <!--            <template #name-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">-->
           <!--              <div class="custom-filter">-->
@@ -167,7 +180,18 @@ export default defineComponent({
       }
       return { rowspan: 1, colspan: 1 };
     };
-
+    // const  spanMethodAll= ({rowIndex, columnIndex}) => {
+    //   if (rowIndex === 1 && columnIndex === 0) {
+    //     return {rowspan: 2}
+    //   }
+    //
+    //   if (rowIndex === 1 && columnIndex === 2) {
+    //     return {
+    //       rowspan: 2,
+    //       colspan: 3
+    //     }
+    //   }
+    // };
     // 定义列
     const columns = [
       { title: '学科',

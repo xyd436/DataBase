@@ -4,7 +4,7 @@
       <div class="logo" />
       <a-menu
           :default-open-keys="['2','3']"
-          :default-selected-keys="['/MentorSelection']"
+          :default-selected-keys="['/MentorQualification']"
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
       >
@@ -44,8 +44,8 @@
       </a-layout-header >
       <a-layout style="padding: 0 24px;">
         <a-breadcrumb :style="{ margin: '16px 0' }">
-          <a-breadcrumb-item>志愿管理</a-breadcrumb-item>
-          <a-breadcrumb-item>导师选择</a-breadcrumb-item>
+          <a-breadcrumb-item>导师管理</a-breadcrumb-item>
+          <a-breadcrumb-item>导师资格审查</a-breadcrumb-item>
         </a-breadcrumb>
         <a-layout-content>Content</a-layout-content>
         <a-layout-footer>Footer</a-layout-footer>

@@ -3,7 +3,7 @@
     <a-layout-sider collapsible breakpoint="xl">
       <div class="logo" />
       <a-menu
-          :default-open-keys="['3']"
+          :default-open-keys="['2','3']"
           :default-selected-keys="['/MentorManagement']"
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
@@ -12,10 +12,14 @@
           <IconHome></IconHome>
           首页
         </a-menu-item>
-        <a-menu-item key="/MentorManagement">
-          <icon-user-group />
-          导师管理
-        </a-menu-item>
+
+        <a-sub-menu key="2">
+          <template #title>
+            <icon-user-group /> 导师管理
+          </template>
+          <a-menu-item key="/MentorManagement">导师遴选</a-menu-item>
+          <a-menu-item key="/MentorQualification">导师资格审查</a-menu-item>
+        </a-sub-menu>
 
         <a-sub-menu key="3">
           <template #title>
@@ -41,6 +45,7 @@
       <a-layout style="padding: 0 24px;">
         <a-breadcrumb :style="{ margin: '16px 0' }">
           <a-breadcrumb-item>导师管理</a-breadcrumb-item>
+          <a-breadcrumb-item>导师遴选</a-breadcrumb-item>
         </a-breadcrumb>
         <a-layout-content>Content</a-layout-content>
         <a-layout-footer>Footer</a-layout-footer>
