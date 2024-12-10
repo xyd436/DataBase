@@ -276,12 +276,14 @@ export default defineComponent({
       const stuname=record.stuname;
       const coursename=record.coursename;
 
-      axios.put(`http://localhost:4126/updateInitialScore/${score}/${stuname}/${coursename}`,)
+      axios.put(`http://localhost:4216/updateInitialScore/${score}/${stuname}/${coursename}`,)
       .then(res => {
         console.log("更新成功",res.data)
+        Message.success({ content: '更改成功', duration: 2000, showIcon: true });
       })
       .catch(err => {
         console.log("更新失败",err);
+        Message.warning({ content: '更改失败，请重试', duration: 2000, showIcon: true });
       })
     };
     //处理编辑

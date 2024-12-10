@@ -184,6 +184,10 @@ export default defineComponent({
         dataIndex: 'introduction',
       },
       {
+        title: '审核状态',
+        dataIndex: 'admission_status',
+      },
+      {
         title: '操作',
         dataIndex: 'edit',
         slotName: 'edit'
@@ -200,17 +204,34 @@ export default defineComponent({
 
     //表格滑动
     const scroll = {
-      x:1500,
+      x:1700,
       y:550
     }
 
     //处理审核通过
-    const handlePass = () => {
-      console.log('审核通过')
+    const handlePass = (record) => {
+      axios.put(`http://localhost:4216/updateAdmissionStatus_ok/${record.name}`,)
+      .then(res => {
+        console.log("更新成功",res.data)
+        record.admission_status = '拟录取'
+      })
+      .catch(err => {
+        console.log("更新失败",err);
+      })
     };
+
     //处理审核不通过
-    const handleFailed = () => {
-      console.log('审核不通过')
+    const handleFailed = (record) => {
+      axios.put(`http://localhost:4216/updateAdmissionStatus_no/${record.name}`,)
+          .then(res => {
+            console.log("更新成功",res.data)
+            record.admission_status = '审核不通过'
+            Message.success({ content: '更改成功', duration: 2000, showIcon: true });
+          })
+          .catch(err => {
+            console.log("更新失败",err);
+            Message.warning({ content: '更改失败，请重试', duration: 2000, showIcon: true });
+          })
     };
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)

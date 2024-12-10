@@ -59,9 +59,20 @@
             </template>
 
 <!--            编辑描述-->
+            <template #status="{ record }">
+              <a-select
+                  v-if="record.editable"
+                  v-model="record.statusId"
+                  :options="statusOptions"
+                  style="width: 120px"
+              />
+              <span v-else>{{ getStatusText(record.statusId) }}</span>
+<!--              <span v-else>{{ record.status }}</span>-->
+            </template>
+
             <template #detail="{ record }">
-              <a-textarea v-if="record.editable" v-model="record.score" auto-size :max-length="100" allow-clear show-word-limit />
-              <span v-else>{{ record.score }}</span>
+              <a-textarea v-if="record.editable" v-model="record.detail" auto-size :max-length="100" allow-clear show-word-limit />
+              <span v-else>{{ record.detail }}</span>
             </template>
 <!--            编辑保存框-->
             <template #edit="{ record }">
@@ -77,10 +88,6 @@
           </a-table>
 
         </a-layout-content>
-
-<!--        <a-layout-footer>-->
-<!--          页脚部分-->
-<!--        </a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-layout>
@@ -134,14 +141,16 @@ export default defineComponent({
       }
     };
 
-    // 从数据库获取复试成绩数据
     const fetchData = async () => {
       try {
         const response = await axios.get('/selectAllQuestion');
         if (response.data && Array.isArray(response.data)) {
           console.log(response.data); // 检查返回的数据
-          // 使用 splice 确保数据正确更新
-          data.splice(0, data.length, ...response.data); // 更新数据源
+          data.splice(0, data.length, ...response.data.map(item => ({
+            ...item,
+            editable: false,
+            statusId: item.statusId === null ? 0:0,
+          })));
         } else {
           console.error('Invalid data format:', response.data);
         }
@@ -149,7 +158,6 @@ export default defineComponent({
         console.error('Failed to fetch admissions data:', error);
       }
     };
-
 
     const columns = [
       {
@@ -189,6 +197,7 @@ export default defineComponent({
       {
         title: '志愿状态',
         dataIndex: 'status',
+        slotName: 'status',
       },
       {
         title: '描述',
@@ -217,13 +226,22 @@ export default defineComponent({
       mentorName: 'alisa.ross@example.com',
       status: 0,  // 初始值设置为 0
     }]);
-
     //表格滑动
     const scroll = {
       x:1500,
       y:520
     }
-
+    const statusMap = {
+      0: '被质疑',
+      1: '待录取',
+      2: '被拒绝',
+    };
+    // 定义志愿状态选项
+    const statusOptions = [
+      { label: '被质疑', value: 0 },
+      { label: '待录取', value: 1 },
+      { label: '被拒绝', value: 2 },
+    ];
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)
     }
@@ -233,7 +251,35 @@ export default defineComponent({
     };
     //处理数据保存
     const handleSave = (record) => {
+      console.log(record)
       record.editable = false;
+      record.status = statusMap[record.statusId];
+
+      const studentName=record.studentName;
+      const mentroName=record.mentorName;
+      const detail=record.detail;
+      let statusId;
+      if (record.status === '被质疑') {
+        statusId = 2;
+      } else if (record.status === '待录取') {
+        statusId = 0;
+      } else if (record.status === '被拒绝') {
+        statusId = 3;
+      }
+
+      axios.put(`http://localhost:4216/updateSkepticalStatus/${statusId}/${detail}/${studentName}/${mentroName}`,)
+      .then(res => {
+        console.log("更新成功",res);
+        Message.success({ content: '更改成功', duration: 2000, showIcon: true });
+      })
+      .catch(err => {
+        console.log("更新失败",err);
+        Message.warning({ content: '更改失败，请重试', duration: 2000, showIcon: true });
+      })
+    };
+    // 根据状态值获取对应文本
+    const getStatusText = (statusId) => {
+      return statusMap[statusId] || '未知状态';
     };
 
     // 组件挂载时获取数据
@@ -247,6 +293,8 @@ export default defineComponent({
       handleChange,
       handleEdit,
       handleSave,
+      statusOptions,
+      getStatusText,
     };
   }
 });
