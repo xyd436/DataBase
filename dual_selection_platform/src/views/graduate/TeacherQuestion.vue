@@ -39,14 +39,14 @@
       <a-layout style="padding: 0 20px;">
         <a-breadcrumb :style="{ margin: '14px 0' }">
           <a-breadcrumb-item>录取管理</a-breadcrumb-item>
-          <a-breadcrumb-item>复试导师质疑（导师、学生、志愿、描述...）</a-breadcrumb-item>
+          <a-breadcrumb-item>复试导师质疑</a-breadcrumb-item>
         </a-breadcrumb>
 
         <a-layout-content>
           <a-table :columns="columns" :data="data" :scroll="scroll" column-resizable
                    :pagination="false" :bordered="{cell:true,wrapper: true}" @change="handleChange"
                    :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}" >
-            <template #stuname-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
+            <template #studentName-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
               <div class="custom-filter">
                 <a-space direction="vertical">
                   <a-input :model-value="filterValue[0]" @input="(value)=>setFilterValue([value])" />
@@ -59,9 +59,20 @@
             </template>
 
 <!--            编辑描述-->
+            <template #status="{ record }">
+              <a-select
+                  v-if="record.editable"
+                  v-model="record.statusId"
+                  :options="statusOptions"
+                  style="width: 120px"
+              />
+              <span v-else>{{ getStatusText(record.statusId) }}</span>
+<!--              <span v-else>{{ record.status }}</span>-->
+            </template>
+
             <template #detail="{ record }">
-              <a-textarea v-if="record.editable" v-model="record.score" auto-size :max-length="100" allow-clear show-word-limit />
-              <span v-else>{{ record.score }}</span>
+              <a-textarea v-if="record.editable" v-model="record.detail" auto-size :max-length="100" allow-clear show-word-limit />
+              <span v-else>{{ record.detail }}</span>
             </template>
 <!--            编辑保存框-->
             <template #edit="{ record }">
@@ -77,10 +88,6 @@
           </a-table>
 
         </a-layout-content>
-
-<!--        <a-layout-footer>-->
-<!--          页脚部分-->
-<!--        </a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-layout>
@@ -134,14 +141,16 @@ export default defineComponent({
       }
     };
 
-    // 从数据库获取复试成绩数据
     const fetchData = async () => {
       try {
-        const response = await axios.get('/findQuestionAll');
+        const response = await axios.get('/selectAllQuestion');
         if (response.data && Array.isArray(response.data)) {
           console.log(response.data); // 检查返回的数据
-          // 使用 splice 确保数据正确更新
-          data.splice(0, data.length, ...response.data); // 更新数据源
+          data.splice(0, data.length, ...response.data.map(item => ({
+            ...item,
+            editable: false,
+            statusId: item.statusId === null ? 0:0,
+          })));
         } else {
           console.error('Invalid data format:', response.data);
         }
@@ -150,29 +159,20 @@ export default defineComponent({
       }
     };
 
-
     const columns = [
       {
         title: '考生姓名',
-        dataIndex: 'stuname',
+        dataIndex: 'studentName',
         fixed:'left',
         filterable: {
-          filter: (value, record) => record.stuname.includes(value),
-          slotName: 'stuname-filter',
+          filter: (value, record) => record.studentName.includes(value),
+          slotName: 'studentName-filter',
           icon: () => h(IconSearch)
         }
       },
       {
-        title: '性别',
-        dataIndex: 'gender'
-      },
-      {
-        title: '研究方向',
-        dataIndex: 'field',
-      },
-      {
-        title: '导师姓名',
-        dataIndex: 'teaname',
+        title: '准考证号',
+        dataIndex: 'admissionTicketNumber'
       },
       {
         title: '志愿优先级',
@@ -183,16 +183,21 @@ export default defineComponent({
         },
       },
       {
+        title: '导师姓名',
+        dataIndex: 'mentorName',
+      },
+      {
+        title: '研究方向',
+        dataIndex: 'field',
+      },
+      {
+        title: '学科',
+        dataIndex: 'discipline',
+      },
+      {
         title: '志愿状态',
-        dataIndex: 'choicestatus',
-        customRender: ({ text }) => {
-          if (text === 2) {
-            return '被质疑';
-          } else if (text === 0) {
-            return '考生已提交';
-          }
-          return text; // 默认显示数字
-        },
+        dataIndex: 'status',
+        slotName: 'status',
       },
       {
         title: '描述',
@@ -208,26 +213,35 @@ export default defineComponent({
 
     const data = reactive([{
       key: '1',
-      stuname: 'Jane Doe',
-      gender: 23000,
-      field: '32 Park Road, London',
-      teaname: 'jane.doe@example.com',
-      choicestatus: 2,  // 初始值设置为 2
+      studentName: 'Jane Doe',
+      admissionTicketNumber: 23000,
+      priority: '32 Park Road, London',
+      mentorName: 'jane.doe@example.com',
+      status: 2,  // 初始值设置为 2
     }, {
       key: '2',
-      stuname: 'Alisa Ross',
-      gender: 25000,
-      field: '35 Park Road, London',
-      teaname: 'alisa.ross@example.com',
-      choicestatus: 0,  // 初始值设置为 0
+      studentName: 'Alisa Ross',
+      admissionTicketNumber: 25000,
+      priority: '35 Park Road, London',
+      mentorName: 'alisa.ross@example.com',
+      status: 0,  // 初始值设置为 0
     }]);
-
     //表格滑动
     const scroll = {
-      x:1300,
+      x:1500,
       y:520
     }
-
+    const statusMap = {
+      0: '被质疑',
+      1: '待录取',
+      2: '被拒绝',
+    };
+    // 定义志愿状态选项
+    const statusOptions = [
+      { label: '被质疑', value: 0 },
+      { label: '待录取', value: 1 },
+      { label: '被拒绝', value: 2 },
+    ];
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)
     }
@@ -237,7 +251,35 @@ export default defineComponent({
     };
     //处理数据保存
     const handleSave = (record) => {
+      console.log(record)
       record.editable = false;
+      record.status = statusMap[record.statusId];
+
+      const studentName=record.studentName;
+      const mentroName=record.mentorName;
+      const detail=record.detail;
+      let statusId;
+      if (record.status === '被质疑') {
+        statusId = 2;
+      } else if (record.status === '待录取') {
+        statusId = 0;
+      } else if (record.status === '被拒绝') {
+        statusId = 3;
+      }
+
+      axios.put(`http://localhost:4216/updateSkepticalStatus/${statusId}/${detail}/${studentName}/${mentroName}`,)
+      .then(res => {
+        console.log("更新成功",res);
+        Message.success({ content: '更改成功', duration: 2000, showIcon: true });
+      })
+      .catch(err => {
+        console.log("更新失败",err);
+        Message.warning({ content: '更改失败，请重试', duration: 2000, showIcon: true });
+      })
+    };
+    // 根据状态值获取对应文本
+    const getStatusText = (statusId) => {
+      return statusMap[statusId] || '未知状态';
     };
 
     // 组件挂载时获取数据
@@ -251,6 +293,8 @@ export default defineComponent({
       handleChange,
       handleEdit,
       handleSave,
+      statusOptions,
+      getStatusText,
     };
   }
 });

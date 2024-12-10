@@ -44,7 +44,7 @@
           <!--          内容展示部分-->
           <a-table :columns="columns" :data="data" :scroll="scroll" column-resizable
                    :pagination="false" :bordered="{cell:true,wrapper: true}" @change="handleChange"
-                   :style="{fontSize: '16px',height: '93%',fontFamily:'微软雅黑'}" >
+                   :style="{fontSize: '16px',height: '99%',fontFamily:'微软雅黑'}" >
             <template #stuname-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
               <div class="custom-filter">
                 <a-space direction="vertical">
@@ -66,8 +66,7 @@
               <a-date-picker
                   v-if="record.editable" v-model="record.time"
                   style="width: 160px"
-                  show-time
-                  format="YYYY-MM-DD hh:mm"
+                  format="YYYY-MM-DD"
                   @change="onChange"
                   @select="onSelect"
                   @ok="onOk"
@@ -93,7 +92,7 @@
             </template>
           </a-table>
           <!--          上传所有成绩按钮-->
-          <a-button @click="handleSubmit" type="primary">上传所有成绩</a-button>
+<!--          <a-button @click="handleSubmit" type="primary">上传所有成绩</a-button>-->
         </a-layout-content>
 
 
@@ -248,7 +247,7 @@ export default defineComponent({
     //表格滑动
     const scroll = {
       x:1800,
-      y:520
+      y:550
     }
 
     //表格数据
@@ -270,10 +269,23 @@ export default defineComponent({
     //处理数据保存
     const handleSave = (record) => {
       record.editable = false;
-    };
-    //处理数据提交
-    const handleSubmit = () => {
-      console.log('提交数据：', data);
+      console.log('record: ', record);
+
+      const stuname=record.stuname;
+      const score=record.score;
+      const time=record.time;
+      const location=record.location;
+      const course=record.course;
+
+      axios.put(`http://localhost:4216/updateSecondScore/${score}/${stuname}/${course}/${time}/${location}`,)
+          .then(res => {
+            console.log("更新成功",res.data)
+            Message.success({ content: '更改成功', duration: 2000, showIcon: true });
+          })
+          .catch(err => {
+            console.log("更新失败",err);
+            Message.warning({ content: '更改失败，请重试', duration: 2000, showIcon: true });
+          })
     };
     const handleChange = (data, extra, currentDataSource) => {
       console.log('change', data, extra, currentDataSource)
@@ -290,7 +302,6 @@ export default defineComponent({
       handleChange,
       handleEdit,
       handleSave,
-      handleSubmit,
       onClickMenuItem,
     }
   },

@@ -10,6 +10,7 @@
       >
         <a-sub-menu key="1">
           <template #title>
+            <icon-user-group />
             <IconCalendar></IconCalendar> 考生管理
           </template>
           <a-menu-item key="1_1">初试成绩管理</a-menu-item>
@@ -38,21 +39,44 @@
       <a-layout style="padding: 0 20px;">
         <a-breadcrumb :style="{ margin: '14px 0' }">
           <a-breadcrumb-item>录取管理</a-breadcrumb-item>
-          <a-breadcrumb-item>复试信息审核（审核考生的信息）</a-breadcrumb-item>
+          <a-breadcrumb-item>复试信息审核</a-breadcrumb-item>
         </a-breadcrumb>
+
         <a-layout-content>
-          <template>
-            <a-table :columns="columns" :data="data" />
-          </template>
+          <a-table :columns="columns" :data="data" :scroll="scroll" column-resizable
+                   :pagination="false" :bordered="{cell:true,wrapper: true}" @change="handleChange"
+                   :style="{fontSize: '16px',height: '100%',fontFamily:'微软雅黑'}">
+            <template #name-filter="{ filterValue, setFilterValue, handleFilterConfirm, handleFilterReset}">
+              <div class="custom-filter">
+                <a-space direction="vertical">
+                  <a-input :model-value="filterValue[0]" @input="(value)=>setFilterValue([value])" />
+                  <div class="custom-filter-footer">
+                    <a-button @click="handleFilterConfirm">查找</a-button>
+                    <a-button @click="handleFilterReset">重置</a-button>
+                  </div>
+                </a-space>
+              </div>
+            </template>
+
+            <template #edit="{ record }">
+              <a-space>
+                <a-button type="primary" status="success" @click="handlePass(record)">通过</a-button>
+                <a-button type="primary" status="warning" @click="handleFailed(record)" >驳回</a-button>
+              </a-space>
+            </template>
+          </a-table>
+          
+          
         </a-layout-content>
-        <a-layout-footer>Footer</a-layout-footer>
+        
+<!--        <a-layout-footer>Footer</a-layout-footer>-->
       </a-layout>
     </a-layout>
   </a-layout>
 </template>
 
 <script>
-import {onMounted} from 'vue';
+import {h, onMounted} from 'vue';
 import axios from "axios";
 import {reactive} from "vue";
 import { defineComponent } from 'vue';
@@ -61,7 +85,7 @@ import { useRouter } from 'vue-router'; // 引入 useRouter 钩子
 import {
   IconCaretRight,
   IconCaretLeft,
-  IconCalendar,
+  IconCalendar, IconSearch,
 } from '@arco-design/web-vue/es/icon';
 
 export default defineComponent({
@@ -72,80 +96,6 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter(); // 使用 useRouter 钩子
-    const columns = [
-      {
-        title: 'id',
-        dataIndex: 'id',
-        ellipsis: true,
-        tooltip: true,
-        width: 100
-      },
-      {
-        title: 'score',
-        dataIndex: 'score',
-      },
-      {
-        title: 'student_id',
-        dataIndex: 'student_id',
-        ellipsis: true,
-        width: 150,
-      },
-      {
-        title: 'course_id',
-        dataIndex: 'course_id',
-        ellipsis: true,
-        tooltip: {position: 'left'},
-        width: 200,
-      },
-    ];
-    const data = reactive([{
-      key: '1',
-      name: 'Jane Doe',
-      score: 23000,
-      student_id: '32 Park Road, London',
-      course_id: 'jane.doe@example.com'
-    }, {
-      key: '2',
-      name: 'Alisa Ross',
-      score: 25000,
-      student_id: '35 Park Road, London',
-      course_id: 'alisa.ross@example.com'
-    }, {
-      key: '3',
-      name: 'Kevin Sandra',
-      score: 22000,
-      student_id: '31 Park Road, London',
-      course_id: 'kevin.sandra@example.com'
-    }, {
-      key: '4',
-      name: 'Ed Hellen',
-      score: 17000,
-      student_id: '42 Park Road, London',
-      course_id: 'ed.hellen@example.com'
-    }, {
-      key: '5',
-      name: 'William Smith',
-      score: 27000,
-      student_id: '62 Park Road, London',
-      course_id: 'william.smith@example.com'
-    }]);
-
-    // 获取招生数据
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/findAll');
-        if (response.data && Array.isArray(response.data)) {
-          console.log(response.data);
-          data.splice(0, data.length, ...response.data);
-        } else {
-          console.error('Invalid data format:', response.data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch admissions data:', error);
-      }
-    };
-
-    onMounted(fetchData);
 
     const onClickMenuItem = (key) => {
       switch (key) {
@@ -175,10 +125,128 @@ export default defineComponent({
       }
     };
 
+    // 获取招生数据
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/findStuAll');
+        if (response.data && Array.isArray(response.data)) {
+          console.log(response.data);
+          data.splice(0, data.length, ...response.data);
+        } else {
+          console.error('Invalid data format:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch admissions data:', error);
+      }
+    };
+
+    const columns = [
+      {
+        title: '姓名',
+        dataIndex: 'name',
+        fixed:'left',
+        filterable: {
+          filter: (value, record) => record.name.includes(value),
+          slotName: 'name-filter',
+          icon: () => h(IconSearch),
+        }
+      },
+      {
+        title: '性别',
+        dataIndex: 'gender',
+      },
+      {
+        title: '出生日期',
+        dataIndex: 'birth',
+      },
+      {
+        title: '毕业院校',
+        dataIndex: 'undergraduate_school',
+      },
+      {
+        title: '本科专业',
+        dataIndex: 'undergraduate_major',
+      },
+      {
+        title: '应届类别',
+        dataIndex: 'graduating_category',
+      },
+      {
+        title: '定向类别',
+        dataIndex: 'directed_category',
+      },
+      {
+        title: '是否接收方向调整',
+        dataIndex: 'adjust_accepted',
+      },
+      {
+        title: '个人简介',
+        dataIndex: 'introduction',
+      },
+      {
+        title: '审核状态',
+        dataIndex: 'admission_status',
+      },
+      {
+        title: '操作',
+        dataIndex: 'edit',
+        slotName: 'edit'
+      }
+    ];
+
+    const data = reactive([{
+      key: '1',
+      name: 'Jane Doe',
+      score: 23000,
+      student_id: '32 Park Road, London',
+      course_id: 'jane.doe@example.com'
+    }]);
+
+    //表格滑动
+    const scroll = {
+      x:1700,
+      y:550
+    }
+
+    //处理审核通过
+    const handlePass = (record) => {
+      axios.put(`http://localhost:4216/updateAdmissionStatus_ok/${record.name}`,)
+      .then(res => {
+        console.log("更新成功",res.data)
+        record.admission_status = '拟录取'
+      })
+      .catch(err => {
+        console.log("更新失败",err);
+      })
+    };
+
+    //处理审核不通过
+    const handleFailed = (record) => {
+      axios.put(`http://localhost:4216/updateAdmissionStatus_no/${record.name}`,)
+          .then(res => {
+            console.log("更新成功",res.data)
+            record.admission_status = '审核不通过'
+            Message.success({ content: '更改成功', duration: 2000, showIcon: true });
+          })
+          .catch(err => {
+            console.log("更新失败",err);
+            Message.warning({ content: '更改失败，请重试', duration: 2000, showIcon: true });
+          })
+    };
+    const handleChange = (data, extra, currentDataSource) => {
+      console.log('change', data, extra, currentDataSource)
+    }
+
+    onMounted(fetchData);
+
     return {
       onClickMenuItem,
       columns,
-      data
+      data,
+      scroll,
+      handlePass,
+      handleFailed,
+      handleChange
     };
   }
 });
@@ -215,16 +283,25 @@ export default defineComponent({
   font-weight: 400;
   font-size: 14px;
   background: var(--color-bg-3);
+  overflow: auto;
 }
 .layout-demo :deep(.arco-layout-footer),
 .layout-demo :deep(.arco-layout-content)  {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   color: var(--color-white);
-  font-size: 16px;
+  font-size: 20px;
   font-stretch: condensed;
   text-align: center;
+}
+.custom-filter {
+  padding: 20px;
+  background: var(--color-bg-5);
+  border: 1px solid var(--color-neutral-3);
+  border-radius: var(--border-radius-medium);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+}
+.custom-filter-footer {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
 
