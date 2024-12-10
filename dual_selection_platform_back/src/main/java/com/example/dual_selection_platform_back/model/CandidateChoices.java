@@ -16,20 +16,30 @@ import lombok.NoArgsConstructor;
 
 public class  CandidateChoices {
     //    @ApiModelProperty：也是 Swagger 框架提供的注解，用于描述模型类中的属性信息。该注解可以设置属性的名称、描述、是否必需等信息，以便在 Swagger 生成的 API 文档中显
+    @ApiModelProperty(value = "选择ID", required = true)
+    private int ChoiceID;
     @ApiModelProperty(value = "考生姓名", required = true)
     private String StudentName;
     @ApiModelProperty(value = "准考证号", required = true)
     private String AdmissionTicketNumber;
     @ApiModelProperty(value = "志愿优先级", required = true)
     private int Priority;
+    @ApiModelProperty(value = "导师ID", required = true)
+    private String MentorID;
     @ApiModelProperty(value = "导师姓名", required = true)
     private String MentorName;
+    @ApiModelProperty(value = "方向招生名额", required = true)
+    private int TotalQuota;
+    @ApiModelProperty(value = "已招生人数", required = true)
+    private int AdmittedQuota;
+    @ApiModelProperty(value = "学校", required = true)
+    private String UndergraduateSchool;
     @ApiModelProperty(value = "学科", required = true)
     private String Discipline;
     @ApiModelProperty(value = "研究方向", required = true)
     private String Field;
     @ApiModelProperty(value = "志愿状态ID",required = true)
-    private int StatusID;
+    private String StatusId;
     @ApiModelProperty(value = "志愿状态",required = true)
     private String Status;
     @ApiModelProperty(value = "志愿相关信息",required = true)
@@ -38,10 +48,4 @@ public class  CandidateChoices {
     private String InitialScores;
     @ApiModelProperty(value = "复试成绩", required = true)
     private String SecondScores;
-    @ApiModelProperty(value = "导师工号", required = true)
-    private String MentorID;
-    @ApiModelProperty(value = "导师总招生指标", required = true)
-    private String TotalQuota;
-    @ApiModelProperty(value = "导师已招生人数", required = true)
-    private String AdmittedQuota;
 }

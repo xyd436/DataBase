@@ -10,7 +10,6 @@ public interface CandidateChoicesMapper {
      * 查询所有记录
      * @returns
      */
-
     @Results({
             @Result(property = "StudentName",column = "StudentName"),
             @Result(property = "AdmissionTicketNumber",column = "AdmissionTicketNumber"),
@@ -29,9 +28,9 @@ public interface CandidateChoicesMapper {
     @Select("SELECT StudentName,AdmissionTicketNumber,Priority,MentorName,Discipline,Field,Status,Detail,InitialScores,SecondScores FROM CandidateChoices")
     List<CandidateChoices> selectAllChoices_Status_Scores();
 
-    @Select("select StudentName,AdmissionTicketNumber,Priority,MentorName,Field,Discipline,Status,Detail FROM CandidateChoices where StatusID=2")
+    @Select("select StudentName,AdmissionTicketNumber,Priority,MentorName,Field,Discipline,Status,Detail FROM CandidateChoices where StatusId=2")
     List<CandidateChoices> selectAllQuestion();
 
-    @Select("select MentorName,TotalQuota,Discipline,Field,StudentName,Status from CandidateChoices where StatusID=1")
+    @Select("select MentorName,TotalQuota,Discipline,Field,StudentName,Status from CandidateChoices where StatusId=1")
     List<CandidateChoices> selectAllResult();
 }

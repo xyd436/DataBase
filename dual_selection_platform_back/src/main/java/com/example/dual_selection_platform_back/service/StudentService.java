@@ -17,4 +17,12 @@ public class StudentService {
     public int findStuId(String stuname){
         return studentMapper.findStuId(stuname);
     }
+
+    public void updateAdmissionStatus_ok(String name){
+        studentMapper.updateAdmissionStatus_ok(name);
+    }
+
+    public void updateAdmissionStatus_no(String name){
+        studentMapper.updateAdmissionStatus_no(name);
+    }
 }

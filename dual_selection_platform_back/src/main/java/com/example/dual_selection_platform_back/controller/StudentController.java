@@ -4,7 +4,6 @@ import com.example.dual_selection_platform_back.model.Student;
 import com.example.dual_selection_platform_back.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -27,4 +26,17 @@ public class StudentController {
     public int findStuId(@PathVariable String stuname){
         return studentService.findStuId(stuname);
     }
+
+    @ApiOperation("学生信息审核通过")
+    @PutMapping("/updateAdmissionStatus_ok/{name}")
+    public void updateAdmissionStatus_ok(@PathVariable String name){
+        studentService.updateAdmissionStatus_ok(name);
+    }
+
+    @ApiOperation("学生信息审核驳回")
+    @PutMapping("/updateAdmissionStatus_no/{name}")
+    public void updateAdmissionStatus_no(@PathVariable String name){
+        studentService.updateAdmissionStatus_no(name);
+    }
+
 }
