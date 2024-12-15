@@ -19,4 +19,13 @@ public class FieldService {
     public int findByName(String name) {
         return fieldMapper.findByName(name);
     }
+
+    public Field findFieldbyId(int field_id){
+        return fieldMapper.findFieldbyId(field_id);
+    }
+
+    public int findFieldbyName(String name){
+        return fieldMapper.findFieldbyName(name);
+    }
+
 }

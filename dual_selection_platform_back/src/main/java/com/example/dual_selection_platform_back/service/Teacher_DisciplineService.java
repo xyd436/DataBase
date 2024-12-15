@@ -10,7 +10,16 @@ import java.util.List;
 public class Teacher_DisciplineService {
     @Autowired
     private Teacher_DisciplineMapper teacher_DisciplineMapper;
+
     public List<Teacher_Discipline> getAllTeacherDiscipline() {
         return teacher_DisciplineMapper.findAllTeacherDiscipline();
+    }
+
+    public void updateTeacherDiscipline_quota(int quota,String teacher_number,String disciplineName){
+        teacher_DisciplineMapper.updateTeacherDiscipline_quota(quota, teacher_number, disciplineName);
+    }
+
+    public void insertTeacherDiscipline(int teacher_id,int discipline_id){
+        teacher_DisciplineMapper.insertTeacherDiscipline(teacher_id,discipline_id);
     }
 }

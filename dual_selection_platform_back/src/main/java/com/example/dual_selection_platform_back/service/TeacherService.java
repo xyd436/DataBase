@@ -39,4 +39,13 @@ public class TeacherService {
         params.put("identity", admission_ability);
         teacherMapper.updateAbilityByID(teacher_number,admission_ability); // 调用Mapper的方法
     }
+
+    public int findTeaIdbyTeaName(String name){
+        return teacherMapper.findTeaIdbyTeaName(name);
+    }
+
+    public String findTeaNamebyTeaId(int id){
+        return teacherMapper.findTeaNamebyTeaId(id);
+    }
+
 }

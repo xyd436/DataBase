@@ -17,8 +17,14 @@ public class SecondScoreService {
     public List<SecondScore> findAllSecond(){
         return secondScoreMapper.findAllSecond();
     }
-    //更新信息s
+    /*
+     * 更新复试时间、地点、成绩/综合评价、
+     */
     public void updateSecondInfo(Date time,String location,String score,String course,int student_id){
         secondScoreMapper.updateSecondInfo(time,location,score,course,student_id);
+    }
+
+    public List<SecondScore> findScoreByStudentId(int student_id){
+        return secondScoreMapper.findScoreByStudentId(student_id);
     }
 }

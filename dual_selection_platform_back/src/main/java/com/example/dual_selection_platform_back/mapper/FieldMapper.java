@@ -13,4 +13,11 @@ public interface FieldMapper {
 
     @Select("SELECT id FROM Field WHERE name=#{name}")
     int findByName(String name);
+
+    //根据field_id查询研究方向和学科
+    @Select("select * from Field where id=#{field_id}")
+    Field findFieldbyId(@Param("field_id")int field_id);
+
+    @Select("select id from Field where name=#{name}")
+    int findFieldbyName(@Param("name")String name);
 }

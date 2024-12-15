@@ -64,5 +64,18 @@ public class TeacherController {
         }
     }
 
+    @ApiOperation("由teacher_name查询teacher_id")
+    @GetMapping("/findTeaIdbyTeaName/{name}")
+    public int findTeaIdbyTeaName(@PathVariable String name){
+        System.out.println("由field_id查询到研究方向："+teacherService.findTeaIdbyTeaName(name));
+        return teacherService.findTeaIdbyTeaName(name);
+    }
+
+    @ApiOperation("由teacher_id查询teacher_name")
+    @GetMapping("/findTeaNamebyTeaId/{id}")
+    public String findTeaNamebyTeaId(@PathVariable int id){
+        System.out.println("由field_id查询到研究方向："+teacherService.findTeaNamebyTeaId(id));
+        return teacherService.findTeaNamebyTeaId(id);
+    }
 
 }

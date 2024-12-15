@@ -28,4 +28,19 @@ public interface TeacherMapper {
     // 获取拥有招生资格的导师
     @Select("SELECT id,name,teacher_number,admission_ability FROM Teacher WHERE admission_ability IS true")
     List<Teacher> findAllTeachersAdmissionAbility_true();
+
+    //根据teacher_name查询teacher_id
+    @Select("select id from Teacher where name=#{name}")
+    int findTeaIdbyTeaName(@Param("name")String name);
+
+    //根据teacher_id查询teacher_name
+    @Select("select name from Teacher where id=#{id}")
+    String findTeaNamebyTeaId(@Param("id")int id);
+
+
+    /**
+     * sc
+     */
+
+
 }

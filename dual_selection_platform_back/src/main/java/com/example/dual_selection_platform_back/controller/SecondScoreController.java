@@ -30,4 +30,11 @@ public class SecondScoreController {
     public void updateSecondInfo(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd")Date time, @PathVariable String location, @PathVariable String score, @PathVariable String course, @PathVariable int student_id) {
         secondScoreService.updateSecondInfo(time,location,score,course,student_id);
     }
+
+    @ApiOperation("根据student_id查询复试信息")
+    @GetMapping("/findScoreByStudentId/{student_id}")
+    public List<SecondScore> findScoreByStudentId(@PathVariable int student_id) {
+        System.out.println("根据student_id查询复试信息"+secondScoreService.findScoreByStudentId(student_id));
+        return secondScoreService.findScoreByStudentId(student_id);
+    }
 }

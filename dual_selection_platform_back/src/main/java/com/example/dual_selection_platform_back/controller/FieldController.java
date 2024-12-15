@@ -39,4 +39,18 @@ public class FieldController {
             return Collections.emptyList(); // 或者其他适当的处理
         }
     }
+
+    @ApiOperation("由field_id查询研究方向")
+    @GetMapping("/findFieldbyId/{field_id}")
+    public Field findFieldbyId(@PathVariable int field_id){
+        System.out.println("由field_id查询到研究方向："+fieldService.findFieldbyId(field_id));
+        return fieldService.findFieldbyId(field_id);
+    }
+
+    @ApiOperation("由field_name查询研究方向id")
+    @GetMapping("/findFieldbyName/{name}")
+    public int findFieldbyName(@PathVariable String name){
+        System.out.println("由field_name查询到研究方向id："+fieldService.findFieldbyName(name));
+        return fieldService.findFieldbyName(name);
+    }
 }

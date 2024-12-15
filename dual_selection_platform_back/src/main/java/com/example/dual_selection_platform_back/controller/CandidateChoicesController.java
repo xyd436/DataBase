@@ -8,8 +8,10 @@ import com.example.dual_selection_platform_back.service.ChoiceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(tags = "API接口")
 @RestController
@@ -23,6 +25,8 @@ public class CandidateChoicesController {
     private TeacherService teacherService;
     @Autowired
     private ChoiceService choiceService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @ApiOperation("考生志愿信息和成绩综合")
     @GetMapping("/selectAllChoices_Status_Scores")
@@ -57,5 +61,24 @@ public class CandidateChoicesController {
     @ApiOperation("查看导师选择")
     @GetMapping("/selectAllMentorSelected")
     public List<CandidateChoices> selectAllMentorSelected() { return candidateChoicesService.selectAllMentorSelected(); }
+
+    @ApiOperation("发布录取通知，更改学生状态为已录取")
+    @PostMapping("/updateAdmissionStatus")
+    public String updateAdmissionStatus(@RequestBody List<String> studentNames) {
+        // 查询学生ID
+        List<Integer> studentIds = studentNames.stream()
+                .map(name -> {
+                    String query = "SELECT id FROM Student WHERE name = ?";
+                    return jdbcTemplate.queryForObject(query, new Object[]{name}, Integer.class);
+                })
+                .collect(Collectors.toList());
+
+        // 更新admission_status
+        String updateSql = "UPDATE Student SET admission_status = 17 WHERE id IN (?)";
+        for (Integer id : studentIds) {
+            jdbcTemplate.update(updateSql, id);
+        }
+        return "Admission status updated successfully for " + studentIds.size() + " students";
+    }
 
 }

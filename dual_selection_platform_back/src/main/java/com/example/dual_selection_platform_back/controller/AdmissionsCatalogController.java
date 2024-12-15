@@ -1,10 +1,7 @@
 package com.example.dual_selection_platform_back.controller;
 
 import com.example.dual_selection_platform_back.model.AdmissionsCatalog;
-import com.example.dual_selection_platform_back.service.AdmissionsCatalogService;
-import com.example.dual_selection_platform_back.service.DisciplineService;
-import com.example.dual_selection_platform_back.service.FieldService;
-import com.example.dual_selection_platform_back.service.Teacher_FieldService;
+import com.example.dual_selection_platform_back.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,7 @@ public class AdmissionsCatalogController {
     @Autowired
     private DisciplineService disciplineService;
     @Autowired
-    private FieldService fieldService;
+    private Teacher_DisciplineService teacherDisciplineService;
     @Autowired
     private Teacher_FieldService teacher_fieldService;
 
@@ -50,26 +47,43 @@ public class AdmissionsCatalogController {
         return admissionsCatalogService.selectAllAdmissionsCatalog_noTeacher();
     }
 
-//    @ApiOperation("更新招生目录")
-//    @PostMapping("addAdmissionCatalog")
-//    public ResponseEntity addAdmissionCatalog(@RequestBody AdmissionsCatalog admissionsCatalog) {
-//        try{
-//
-//            System.out.println("addAdmissionCatalog:"+admissionsCatalog);
-//            String disciplineName = admissionsCatalog.getDisciplineName();
-//            String disciplineCode = admissionsCatalog.getDisciplineCode();
-//            String disciplineType = admissionsCatalog.getDisciplineType();
-//            String note = admissionsCatalog.getNote();
-//            String field = admissionsCatalog.getField();
-//            List<String> course = Collections.singletonList(admissionsCatalog.getCourse());
-//            List<String> mentorIds = admissionsCatalog.getMentor();
-//            int recommendationQuota = admissionsCatalog.getRecommendationQuota();
-//            int totalQuota = admissionsCatalog.getTotalQuota();
-//            if(disciplineService.selectDisciplineByCode(code,name))
-//            return null;
-//        }
-//        catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新招生目录失败: " + e.getMessage());
-//        }
-//    }
+    @ApiOperation("更新招生目录")
+    @PostMapping("/addAdmissionCatalog_teachers") // 修改为@PostMapping，因为我们通过请求体发送数据
+    public List<AdmissionsCatalog> addAdmissionCatalog_teachers(@RequestBody AdmissionCatalogRequest request) {
+        try {
+            String disciplineName = request.getDisciplineName();
+            String disciplineCode = request.getDisciplineCode();
+            int teacherId = request.getTeacherId();
+            int fieldId = request.getFieldId();
+            System.out.println("addAdmissionCatalog_teachers:"+disciplineName+" "+disciplineCode+" "+teacherId+" "+fieldId);
+            int disciplineID = disciplineService.selectDisciplineByCode(disciplineCode,disciplineName);
+            // 写入
+            teacher_fieldService.insertTeacherField(teacherId,fieldId);
+            teacherDisciplineService.insertTeacherDiscipline(teacherId,disciplineID);
+
+            return admissionsCatalogService.selectAllAdmissions();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+}
+
+class AdmissionCatalogRequest {
+    private String disciplineCode;
+    private String disciplineName;
+    private Integer fieldId;
+    private Integer teacherId;
+
+    // Getters and Setters
+
+    public String getDisciplineCode() { return disciplineCode; }
+    public void setDisciplineCode(String disciplineCode) { this.disciplineCode = disciplineCode; }
+    public String getDisciplineName() { return disciplineName; }
+    public void setDisciplineName(String disciplineName) { this.disciplineName = disciplineName; }
+    public Integer getFieldId() { return fieldId; }
+    public void setFieldId(Integer fieldId) { this.fieldId = fieldId; }
+    public Integer getTeacherId() { return teacherId; }
+    public void setTeacherId(Integer teacherId) { this.teacherId = teacherId; }
 }
