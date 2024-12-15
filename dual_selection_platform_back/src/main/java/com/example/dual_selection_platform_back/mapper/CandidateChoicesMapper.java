@@ -33,4 +33,7 @@ public interface CandidateChoicesMapper {
 
     @Select("select MentorName,TotalQuota,Discipline,Field,StudentName,Status from CandidateChoices where StatusId=1")
     List<CandidateChoices> selectAllResult();
+
+    @Select("select MentorID,MentorName,Discipline,Field,TotalQuota,AdmittedQuota,StudentName,Priority,`Status` from CandidateChoices   order by MentorName,Discipline,Field asc ")
+    List<CandidateChoices> selectAllMentorSelected();
 }

@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Api(tags = "API接口")
 @RestController
 @CrossOrigin(origins = "*",maxAge = 3600)
@@ -17,4 +20,11 @@ public class CourseController {
     public int findCourseId(@PathVariable String coursename){
         return courseService.findCourseId(coursename);
     }
+
+    @ApiOperation("查询课程")
+    @GetMapping("/findCourseNameCombined")
+    public List<String> findCourseNameCombined(){
+        return courseService.findCourseNameCombined();
+    }
+
 }

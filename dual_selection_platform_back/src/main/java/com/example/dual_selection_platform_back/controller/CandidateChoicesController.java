@@ -53,4 +53,9 @@ public class CandidateChoicesController {
             e.printStackTrace();
         }
     }
+
+    @ApiOperation("查看导师选择")
+    @GetMapping("/selectAllMentorSelected")
+    public List<CandidateChoices> selectAllMentorSelected() { return candidateChoicesService.selectAllMentorSelected(); }
+
 }

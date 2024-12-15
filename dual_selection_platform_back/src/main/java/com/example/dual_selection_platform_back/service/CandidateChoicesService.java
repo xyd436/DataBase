@@ -42,4 +42,10 @@ public class CandidateChoicesService {
     public List<CandidateChoices> selectAllResult(){
         return candidateChoicesMapper.selectAllResult();
     }
+
+    /**
+     * 查询所有导师选择
+     *
+     */
+    public List<CandidateChoices> selectAllMentorSelected(){  return candidateChoicesMapper.selectAllMentorSelected(); }
 }

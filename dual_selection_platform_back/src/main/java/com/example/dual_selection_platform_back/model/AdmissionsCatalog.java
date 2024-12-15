@@ -28,6 +28,8 @@ public class  AdmissionsCatalog {
     private int recommendationQuota;
     @ApiModelProperty(value = "导师", required = true)
     private String mentor;
+    @ApiModelProperty(value = "导师工号", required = true)
+    private String mentorCode;
     @ApiModelProperty(value = "考试科目", required = true)
     private String course;
     @ApiModelProperty(value = "备注", required = true)

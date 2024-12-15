@@ -8,13 +8,21 @@ import lombok.NoArgsConstructor;
 @lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("研究方向-导师关联")
+@ApiModel("学科-导师关联")
 
-public class Teacher_Field {
+public class Teacher_Discipline {
     @ApiModelProperty(value = "导师ID", required = true)
     private int teacher_id;
 
     @ApiModelProperty(value = "研究方向ID", required = true)
     private int field_id;
 
+    @ApiModelProperty(value = "招生指标数", required = false)
+    private int quota;
+
+    @ApiModelProperty(value = "已确认招生指标数", required = false)
+    private int admitted_quota;
+
+    @ApiModelProperty(value = "许可", required = false)
+    private int permission;
 }

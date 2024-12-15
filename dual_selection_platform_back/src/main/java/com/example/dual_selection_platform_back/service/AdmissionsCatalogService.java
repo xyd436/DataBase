@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AdmissionsCatalogService {
@@ -21,5 +22,13 @@ public class AdmissionsCatalogService {
      */
     public List<AdmissionsCatalog> selectAllAdmissions() {
         return admissionsCatalogMapper.selectAllAdmissions();
+    }
+
+    public List<Map<String,String>> selectDistinctDiscipline(){
+        return admissionsCatalogMapper.selectDistinctDiscipline();
+    }
+
+    public List<AdmissionsCatalog> selectAllAdmissionsCatalog_noTeacher(){
+        return admissionsCatalogMapper.selectAllAdmissionsCatalog_noTeacher();
     }
 }
